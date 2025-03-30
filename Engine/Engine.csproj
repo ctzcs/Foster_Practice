@@ -12,10 +12,7 @@
       <PackageReference Include="Arch.Persistence" Version="1.0.4" />
       <PackageReference Include="Arch.Relationships" Version="1.0.1" />
       <PackageReference Include="Arch.System" Version="1.0.5" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Framework\Framework.csproj" />
+      <PackageReference Include="FosterFramework" Version="0.2.1" />
     </ItemGroup>
 
     <ItemGroup>

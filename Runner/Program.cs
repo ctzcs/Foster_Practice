@@ -1,11 +1,12 @@
 ﻿
-namespace Content;
+
+using Content;
 
 static class Program
 {
     public static void Main(string[] args)
     {
-        GameContent gameContent = new GameContent(new(
+        using GameContent gameContent = new GameContent(new(
             ApplicationName: "Game",
             WindowTitle: "Game",
             Width: 1280,

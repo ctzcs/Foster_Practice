@@ -4,7 +4,7 @@ using Foster.Framework;
 
 namespace Content;
 
-public class GameContent : App
+public class GameContent: App
 {
     private const int MaxFrogs = 1_000_000;
     private const int AddRemoveAmount = 5_000;
