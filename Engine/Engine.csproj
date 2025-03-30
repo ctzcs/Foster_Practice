@@ -23,7 +23,6 @@
       <Folder Include="Source\Audio\" />
       <Folder Include="Source\Particle\" />
       <Folder Include="Source\Render\" />
-      <Folder Include="Source\UI\" />
     </ItemGroup>
 
 </Project>

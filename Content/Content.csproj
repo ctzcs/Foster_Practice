@@ -5,6 +5,8 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <HotReloadEnabled>true</HotReloadEnabled>
+        <HotReloadPartialTypes>true</HotReloadPartialTypes>
         <RootNamespace>Content</RootNamespace>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

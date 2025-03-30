@@ -8,8 +8,8 @@ static class Program
         GameContent gameContent = new GameContent(new(
             ApplicationName: "Game",
             WindowTitle: "Game",
-            Width: 1920,
-            Height: 1080));
+            Width: 1280,
+            Height: 720));
         gameContent.Run();
     }
     

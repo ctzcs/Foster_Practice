@@ -68,11 +68,12 @@ public class GameContent : App
 
     protected override void Shutdown()
     {
-
+        
     }
 
     protected override void Update()
     {
+        //Log.Info("[GameContent]:Update");
         if (Input.Mouse.LeftDown)
         {
             for (int i = 0; i < AddRemoveAmount; i++)
