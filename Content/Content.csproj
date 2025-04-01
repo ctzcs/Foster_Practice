@@ -11,9 +11,9 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-    
+
     <ItemGroup>
-      <ProjectReference Include="..\Engine\Engine.csproj" />
+        <ProjectReference Include="..\Engine\Engine.csproj"/>
     </ItemGroup>
 
 </Project>

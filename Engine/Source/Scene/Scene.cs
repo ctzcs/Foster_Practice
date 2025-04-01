@@ -1,12 +1,35 @@
 ﻿namespace Engine.Source.Scene;
 
-public class Scene:ILifetime
+public class Scene : ILifetime
 {
-    public List<GameObject> AddGameObjects = new List<GameObject>();
-    public List<GameObject> RemoveGameObjects = new List<GameObject>();
-    public List<Component> AddComponents = new List<Component>();
-    public List<Component> RemoveComponents = new List<Component>();
-    
+    public List<Component> AddComponents = new();
+    public List<GameObject> AddGameObjects = new();
+    public List<Component> RemoveComponents = new();
+    public List<GameObject> RemoveGameObjects = new();
+
+
+    public virtual void Awake()
+    {
+    }
+
+    public virtual void Start()
+    {
+    }
+
+    public virtual void Destroy()
+    {
+    }
+
+    public virtual void Update()
+    {
+        //TODO 激活，移除go
+        //TODO 激活，移除component
+    }
+
+    public virtual void Render()
+    {
+    }
+
     public GameObject Instantiate(GameObject gameObject)
     {
         gameObject.AttachToScene(this);
@@ -23,32 +46,5 @@ public class Scene:ILifetime
     public void DestroyImmediate(GameObject gameObject)
     {
         gameObject?.Destroy();
-    }
-
-
-    public virtual void Awake()
-    {
-        
-    }
-
-    public virtual void Start()
-    {
-        
-    }
-
-    public virtual void Destroy()
-    {
-        
-    }
-
-    public virtual void Update()
-    {
-        //TODO 激活，移除go
-        //TODO 激活，移除component
-    }
-
-    public virtual void Render()
-    {
-        
     }
 }

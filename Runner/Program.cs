@@ -1,18 +1,15 @@
-﻿
+﻿using Content;
+using Foster.Framework;
 
-using Content;
-
-static class Program
+internal static class Program
 {
     public static void Main(string[] args)
     {
-        using GameContent gameContent = new GameContent(new(
-            ApplicationName: "Game",
-            WindowTitle: "Game",
-            Width: 1280,
-            Height: 720));
+        using var gameContent = new GameContent(new AppConfig(
+            "Game",
+            "Game",
+            1280,
+            720));
         gameContent.Run();
     }
-    
 }
-

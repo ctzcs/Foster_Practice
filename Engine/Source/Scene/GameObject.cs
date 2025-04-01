@@ -3,9 +3,12 @@
 public class GameObject : Behaviour
 {
     private readonly List<Component> components = [];
-    public Scene? Scene { get;private set; }
+
+    public Scene? Scene { get; private set; }
+
     //是否激活
     public bool IsActive { get; set; }
+
     internal void AttachToScene(Scene scene)
     {
         Scene = scene;
@@ -15,8 +18,8 @@ public class GameObject : Behaviour
     {
         Scene = null;
     }
-    
-    
+
+
     public T Add<T>(T component) where T : Component
     {
         components.Add(component);
@@ -32,26 +35,17 @@ public class GameObject : Behaviour
 
     public void Clear()
     {
-        for (int i = 0; i < components.Count; i++)
-        {
-            components[i].Destroy();
-        }
+        for (var i = 0; i < components.Count; i++) components[i].Destroy();
         components.Clear();
     }
-    
+
     public override void Update()
     {
-        if (!IsActive)
+        if (!IsActive) return;
+
+        for (var i = 0; i < components.Count; i++)
         {
-            return;
-        }
-        
-        for (int i = 0; i < components.Count; i++)
-        {
-            if (components[i].IsEnabled == false)
-            {
-                continue;
-            }
+            if (components[i].IsEnabled == false) continue;
             components[i].Update();
         }
     }

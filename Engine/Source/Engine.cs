@@ -1,5 +1,4 @@
-﻿
-using Arch.Core;
+﻿using Arch.Core;
 using Arch.System;
 using Engine.Source.Test;
 using Engine.Source.Transform;
@@ -18,8 +17,8 @@ public class Engine
             ConstStr.ENGINE,
             new TransformSystem(world),
             group2);
-        
-        float deltaTime = 0.2f;
+
+        var deltaTime = 0.2f;
         group.Initialize();
         group.BeforeUpdate(in deltaTime);
         group.Update(in deltaTime);
