@@ -1,20 +1,38 @@
-﻿using Arch.Core;
+﻿using System.Numerics;
+using Arch.Core;
+using Arch.Core.Extensions;
 using Arch.System;
+using Arch.System.SourceGenerator;
 
 namespace Engine.Source.Transform;
 
-public class TransformSystem : BaseSystem<World, float>
+public partial class TransformSystem : BaseSystem<World, float>
 {
     public TransformSystem(World world) : base(world)
     {
     }
 
-    public override void Update(in float t)
+    /// <summary>
+    /// 所有根节点操作
+    /// </summary>
+    /// <param name="transform"></param>
+    [Query]
+    [All<Transform>, None<ChildOf>]
+    public void RootTransform(ref Transform transform)
     {
-        base.Update(in t);
+        Transform.CalculateWorldPosition(ref transform);
     }
 
-
-    //更新所有根节点坐标
-    //更新所有叶子节点坐标，叶子节点会递归更新所有父节点坐标
+    /// <summary>
+    /// 所有的叶子节点操作
+    /// </summary>
+    /// <param name="transform"></param>
+    [Query]
+    [All<Transform>, None<ParentOf>]
+    public void LeafTransform(ref Transform transform)
+    {
+        Transform.CalculateWorldPosition(ref transform);
+    }
+    
+    
 }

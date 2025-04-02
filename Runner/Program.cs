@@ -5,7 +5,7 @@ internal static class Program
 {
     public static void Main(string[] args)
     {
-        using var gameContent = new GameContent(new AppConfig(
+        using var gameContent = new GameApp(new AppConfig(
             "Game",
             "Game",
             1280,

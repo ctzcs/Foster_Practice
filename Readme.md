@@ -23,4 +23,9 @@
 - Editor:游戏编辑器
   - 利用ImGui制作一个简单的编辑器
   - 显示游戏运行的窗口
+
+
+### 打包发布
+- win-x64 `dotnet publish -r win-x64 -p:PublishSingleFile=true --self-contained true
+`
   

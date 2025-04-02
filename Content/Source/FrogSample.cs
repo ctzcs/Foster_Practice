@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using Engine.Source;
 using Foster.Framework;
 
 namespace Content;
 
-public class GameContent : App
+public class FrogSample:ILifetime
 {
+    private App ctx;
     private const int MaxFrogs = 1_000_000;
     private const int AddRemoveAmount = 5_000;
     private const int DrawBatchSize = 32768;
@@ -23,27 +25,29 @@ public class GameContent : App
 
     private Rng rng = new(1337);
 
-    public GameContent(in AppConfig config) : base(in config)
+    public FrogSample(App ctx)
     {
-        GraphicsDevice.VSync = true;
-        Window.Resizable = true;
-        UpdateMode = UpdateMode.UnlockedStep();
-        batcher = new Batcher(GraphicsDevice);
-        texture = new Texture(GraphicsDevice, new Image(Path.Join("Assets", "frog_knight.png")));
-        font = new SpriteFont(GraphicsDevice, Path.Join("Assets", "monogram.ttf"), 32);
+        this.ctx = ctx;
+        batcher = new Batcher(ctx.GraphicsDevice);
+        texture = new Texture(ctx.GraphicsDevice, new Image(Path.Join("Assets", "frog_knight.png")));
+        font = new SpriteFont(ctx.GraphicsDevice, Path.Join("Assets", "monogram.ttf"), 32);
 
-        mesh = new Mesh<PosTexColVertex>(GraphicsDevice);
-        material = new Material(new TexturedShader(GraphicsDevice));
+        //构建网格
+        mesh = new Mesh<PosTexColVertex>(ctx.GraphicsDevice);
+        //构建材质
+        material = new Material(new TexturedShader(ctx.GraphicsDevice));
 
         // We only need to initialize indices once, since we're only drawing quads
         var indexArray = new int[DrawBatchSize * 6];
         var vertexCount = 0;
-
+        
         for (var i = 0; i < indexArray.Length; i += 6)
         {
+            //顶点合并，但是索引不合并，索引+6，顶点数量+4
             indexArray[i + 0] = vertexCount + 0;
             indexArray[i + 1] = vertexCount + 1;
             indexArray[i + 2] = vertexCount + 2;
+            
             indexArray[i + 3] = vertexCount + 0;
             indexArray[i + 4] = vertexCount + 2;
             indexArray[i + 5] = vertexCount + 3;
@@ -61,25 +65,25 @@ public class GameContent : App
             vertexArray[i + 3].Tex = new Vector2(0, 1);
         }
     }
-
-    protected override void Startup()
+    
+    public void Start()
     {
-        Log.Info("[GameContent]:Startup");
+        
     }
 
-    protected override void Shutdown()
+    public void Destroy()
     {
+        
     }
 
-    protected override void Update()
+    public void Update()
     {
-        //Log.Info("[GameContent]:Update");
-        if (Input.Mouse.LeftDown)
+        if (ctx.Input.Mouse.LeftDown)
         {
             for (var i = 0; i < AddRemoveAmount; i++)
                 if (frogCount < MaxFrogs)
                 {
-                    frogs[frogCount].Position = Input.Mouse.Position;
+                    frogs[frogCount].Position = ctx.Input.Mouse.Position;
                     frogs[frogCount].Speed.X = rng.Float(-250, 250) / 60.0f;
                     frogs[frogCount].Speed.Y = rng.Float(-250, 250) / 60.0f;
                     frogs[frogCount].Color = new Color(
@@ -92,19 +96,19 @@ public class GameContent : App
                 }
         }
         // Remove frogs
-        else if (Input.Mouse.RightDown)
+        else if (ctx.Input.Mouse.RightDown)
         {
             frogCount = Math.Max(0, frogCount - AddRemoveAmount);
         }
 
         // Update frogs
         var halfSize = (Vector2)texture.Size / 2f;
-        var screenSize = new Vector2(Window.WidthInPixels, Window.HeightInPixels);
+        var screenSize = new Vector2(ctx.Window.WidthInPixels, ctx.Window.HeightInPixels);
 
         var range = 100;
         float acc = 10;
-        float maxSpeed = 1;
-        var mousePos = Input.Mouse.Position;
+        float maxSpeed = 2;
+        var mousePos = ctx.Input.Mouse.Position;
         for (var i = 0; i < frogCount; i++)
         {
             if (IsInCircle(mousePos, frogs[i].Position, range))
@@ -128,29 +132,34 @@ public class GameContent : App
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private bool IsInCircle(Vector2 pos, Vector2 target, float radius)
-    {
-        return Vector2.DistanceSquared(pos, target) <= radius * radius;
-    }
-
-    protected override void Render()
+    public void Render()
     {
         frameCounter.Update();
-        Window.Clear(Color.White);
+        ctx.Window.Clear(Color.White);
         batcher.Text(font, $"{frogCount} Frogs : {frameCounter.FPS} FPS", new Vector2(8, -2), Color.Black);
-        batcher.Render(Window);
+        batcher.Render(ctx.Window);
         batcher.Clear();
         // Batching/batch size is important: too low = excessive draw calls, too high = slower gpu copies
         for (var i = 0; i < frogCount; i += DrawBatchSize)
         {
             var count = Math.Min(frogCount - i, DrawBatchSize);
-            if (Input.Keyboard.Down(Keys.Space))
+            if (ctx.Input.Keyboard.Down(Keys.Space))
                 RenderBatchCustom(i, count);
             else
                 RenderBatchFoster(i, count);
         }
     }
+
+
+
+    
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private bool IsInCircle(Vector2 pos, Vector2 target, float radius)
+    {
+        return Vector2.DistanceSquared(pos, target) <= radius * radius;
+    }
+    
 
 
     /// <summary>
@@ -165,7 +174,7 @@ public class GameContent : App
             batcher.Image(texture, frog.Position, frog.Color);
         }
 
-        batcher.Render(Window);
+        batcher.Render(ctx.Window);
         batcher.Clear();
     }
 
@@ -181,6 +190,7 @@ public class GameContent : App
     /// </summary>
     private void RenderBatchCustom(int from, int count)
     {
+        //
         for (var i = 0; i < count; i++)
         {
             var frog = frogs[i + from];
@@ -199,48 +209,27 @@ public class GameContent : App
 
         if (from == 0)
         {
-            var matrix = Matrix4x4.CreateOrthographicOffCenter(0, Window.WidthInPixels, Window.HeightInPixels, 0, 0,
+            var matrix = Matrix4x4.CreateOrthographicOffCenter(0, ctx.Window.WidthInPixels, ctx.Window.HeightInPixels,
+                0, 0,
                 float.MaxValue);
             material.Vertex.SetUniformBuffer(matrix);
             material.Fragment.Samplers[0] = new Material.BoundSampler(texture, new TextureSampler());
         }
 
-        DrawCommand command = new(Window, mesh, material)
+        DrawCommand command = new(ctx.Window, mesh, material)
         {
             BlendMode = BlendMode.Premultiply,
             MeshIndexStart = 0,
             MeshIndexCount = count * 6
         };
 
-        command.Submit(GraphicsDevice);
+        command.Submit(ctx.GraphicsDevice);
     }
-}
 
-public struct Frog
-{
-    public Vector2 Position;
-    public Vector2 Speed;
-    public Color Color;
-}
-
-/// <summary>
-///     Simple utility to count frames in last second
-/// </summary>
-public class FrameCounter
-{
-    public int FPS;
-    public int Frames;
-    public Stopwatch sw = Stopwatch.StartNew();
-
-    public void Update()
+    public struct Frog
     {
-        Frames++;
-        var elapsed = sw.Elapsed.TotalSeconds;
-        if (elapsed > 1)
-        {
-            sw.Restart();
-            FPS = Frames;
-            Frames = 0;
-        }
+        public Vector2 Position;
+        public Vector2 Speed;
+        public Color Color;
     }
 }

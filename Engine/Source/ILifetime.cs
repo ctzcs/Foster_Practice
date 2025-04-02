@@ -2,7 +2,6 @@
 
 public interface ILifetime
 {
-    void Awake();
     void Start();
     void Destroy();
     void Update();

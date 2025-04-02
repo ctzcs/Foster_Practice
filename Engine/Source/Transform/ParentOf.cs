@@ -1,9 +1,13 @@
-﻿namespace Engine.Source.Transform;
+﻿
+using Arch.AOT.SourceGenerator;
+
+namespace Engine.Source.Transform;
 
 /// <summary>
-///     Tag 谁的Parent,一对多的关系
-///     可用于找到Child，也可以用于找到叶子节点
+///如果有这个标签说明有child
+///用于找到Parent
 /// </summary>
+[Component]
 public struct ParentOf
 {
 }

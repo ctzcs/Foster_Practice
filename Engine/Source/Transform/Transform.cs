@@ -1,99 +1,107 @@
 ﻿using System.Numerics;
+using Arch.Core;
+using Arch.Core.Extensions;
 
 namespace Engine.Source.Transform;
 
-public class Transform
+public struct Transform
 {
+    public Entity parent;
+    
+    public List<Entity> children;
     /// <summary>
-    ///     Local用来表示相对父节点的偏移
+    /// Local用来表示相对父节点的偏移
     /// </summary>
-    private Vector3 _localPosition;
+    public Vector2 localPosition;
 
     /// WorldPos用来渲染
-    private Vector3 _worldPosition = Vector3.Zero;
-
-    private List<Transform> children = new();
-    public bool dirty = true;
-    private Transform? parent;
-
+    public Vector2 worldPosition;
+    
     public float rotation;
-
-    private readonly Vector3 scale = Vector3.One;
-
-    public Transform()
+    
+    public Vector2 scale;
+    
+    public bool isDirty;
+    
+    
+    
+    /// <summary>
+    /// 设置本地坐标后，local变了，也是相对父节点变化，延迟计算世界坐标
+    /// </summary>
+    /// <param name="transform"></param>
+    internal static void CalculateWorldPosition(ref Transform transform)
     {
-    }
-
-    public Transform(Vector3 initialPosition)
-    {
-        Position = initialPosition;
-    }
-
-    public static Vector3 Origin => Vector3.Zero;
-
-    public Vector3 LocalPosition
-    {
-        get => _localPosition;
-        set
+        if (transform.isDirty)
         {
-            _localPosition = value;
-            dirty = true;
-        }
-    }
-
-    public Vector3 Position
-    {
-        get
-        {
-            if (dirty)
+            if (transform.parent != Entity.Null)
             {
-                //计算父坐标
-                CalculateWorldPosition();
-                dirty = false;
-                return _worldPosition;
+                ref var parentTransform = ref transform.parent.Get<Transform>();
+                if (parentTransform.isDirty)
+                {
+                    CalculateWorldPosition(ref parentTransform);
+                }
+                transform.worldPosition = parentTransform.worldPosition + transform.localPosition;
             }
-
-            return _worldPosition;
+            else
+            {
+                transform.worldPosition = transform.localPosition;
+            }
+            transform.isDirty = false;
         }
-        set
+    }
+
+    /// <summary>
+    /// 直接设置世界坐标的时候，世界坐标已经算好了，其实是本地坐标相对父节点变化,应该立即调用
+    /// </summary>
+    /// <param name="transform"></param>
+    internal static void CalculateLocalPosition(ref Transform transform)
+    {
+        if (transform.isDirty)
         {
-            _worldPosition = value;
-            CalculateLocalPosition();
-            dirty = true;
+            if (transform.parent != Entity.Null)
+            {
+                ref var parentTransform = ref transform.parent.Get<Transform>();
+                CalculateWorldPosition(ref parentTransform);
+                transform.localPosition = transform.worldPosition - parentTransform.worldPosition;
+            }
+            else
+            {
+                transform.localPosition = transform.worldPosition;
+            }
+            transform.isDirty = false;
         }
     }
+    
+    //更新所有根节点坐标
+    //更新所有叶子节点坐标，叶子节点会递归更新所有父节点坐标
+    
+    //父节点的本地或者世界坐标变换的时候，所有子节点的坐标标记为脏
 
-    /*public Vector3 PositionV2
+
+    public static void SetWorldPosition(ref Transform transform, Vector2 worldPosition)
     {
-        get => _worldPosition + _localPosition;
-        set
+        transform.worldPosition = worldPosition;
+        CalculateWorldPosition(ref transform);
+        DirtyMake(ref transform,false);
+    }
+
+    public static void SetLocalPosition(ref Transform transform, Vector2 localPosition)
+    {
+        transform.localPosition = localPosition;
+        DirtyMake(ref transform,true);
+    }
+    
+    static void DirtyMake(ref Transform transform,bool selfDirty)
+    {
+        if (selfDirty)
         {
-            _worldPosition = value;
-            dirty = true;
+            transform.isDirty = true;
         }
-    }*/
-
-    public int Facing => MathF.Sign(scale.X);
-
-    internal void UpdateWorldPosition(Vector3 newWorldPosition)
-    {
-        _worldPosition = newWorldPosition;
-        dirty = true;
-    }
-
-    internal void CalculateWorldPosition()
-    {
-        if (parent != null)
-            _worldPosition = parent.Position + _localPosition;
-        else
-            _worldPosition = _localPosition;
-    }
-
-    internal void CalculateLocalPosition()
-    {
-        if (parent != null)
-            _localPosition = _worldPosition - parent.Position;
-        else
-            _localPosition = _worldPosition;
+        var children = transform.children;
+        for (int i = 0; i < children.Count; i++)
+        {
+            children[i].Get<Transform>().isDirty = true;
+        }
     }
 }
+
