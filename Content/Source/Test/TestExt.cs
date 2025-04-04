@@ -59,8 +59,22 @@ public static class TestExt
         
         return ent;
     }
-    
 
+    public static void CreateFrogCarrier(World world,Vector2 pos,Texture texture,Color color,int wholeCount)
+    {
+        var root = CreateSimpleFrog
+            (world, pos, Vector2.One, texture, color, 0);
+        var last = root;
+        for (int i = 0; i < wholeCount; i++)
+        {
+            var e = CreateSimpleFrog
+                (world, new Vector2(0, -10), Vector2.One, texture,Color.Green, i);
+            e.SetParent(last);
+            last = e;
+        }
+       
+    }
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void SetParent(this Entity child, Entity parent)
     {

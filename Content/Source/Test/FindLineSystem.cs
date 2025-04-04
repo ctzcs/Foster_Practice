@@ -14,7 +14,8 @@ namespace Content.Test;
 public partial class FindLineSystem:BaseSystem<World,float>
 {
     private World world;
-    private Rng rng; 
+    private Rng rng;
+    private float speed = 5;
     public FindLineSystem(World world,Rng rng) : base(world)
     {
         this.world = world;
@@ -60,7 +61,7 @@ public partial class FindLineSystem:BaseSystem<World,float>
                    var dir = (pos - transform.localPosition).Normalized();
                    if (Vector2.DistanceSquared(pos,transform.localPosition) > 2 )
                    {
-                       Transform.SetLocalPosition(ref transform, transform.localPosition + dir*2f);
+                       Transform.SetLocalPosition(ref transform, transform.localPosition + dir*speed);
                    }
                    else
                    {

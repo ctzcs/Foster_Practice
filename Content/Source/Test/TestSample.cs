@@ -77,33 +77,7 @@ public class TestSample:ILifetime
             {
                 case "Frog":
                     var pos = ctx.Input.Mouse.Position;
-                    var e = TestExt.CreateSimpleFrog(world, pos, Vector2.One, texture, Color.Red, 0);
-                    var e2 = TestExt.CreateSimpleFrog(world, new Vector2(0, -10), Vector2.One, texture, Color.Green, 1);
-                    var e3 = TestExt.CreateSimpleFrog(world, new Vector2(0, -10), Vector2.One, texture, Color.Yellow,
-                        2);
-                    var e4 = TestExt.CreateSimpleFrog(world, new Vector2(0, -10), Vector2.One, texture, Color.Yellow,
-                        3);
-                    var e5 = TestExt.CreateSimpleFrog(world, new Vector2(0, -10), Vector2.One, texture, Color.Yellow,
-                        4);
-                    var e6 = TestExt.CreateSimpleFrog(world, new Vector2(0, -10), Vector2.One, texture, Color.Yellow,
-                        5);
-                    var e7 = TestExt.CreateSimpleFrog(world, new Vector2(0, -10), Vector2.One, texture, Color.Yellow,
-                        6);
-                    var e8 = TestExt.CreateSimpleFrog(world, new Vector2(0, -10), Vector2.One, texture, Color.Yellow,
-                        7);
-                    var e9 = TestExt.CreateSimpleFrog(world, new Vector2(0, -10), Vector2.One, texture, Color.Yellow,
-                        8);
-                    var e10 = TestExt.CreateSimpleFrog(world, new Vector2(0, -10), Vector2.One, texture, Color.Yellow,
-                        9);
-                    e2.SetParent(e);
-                    e3.SetParent(e2);
-                    e4.SetParent(e3);
-                    e5.SetParent(e4);
-                    e6.SetParent(e5);
-                    e7.SetParent(e6);
-                    e8.SetParent(e7);
-                    e9.SetParent(e8);
-                    e10.SetParent(e9);
+                    TestExt.CreateFrogCarrier(world, pos, texture, Color.Red,5);
                     count++;
                     break;
             }
