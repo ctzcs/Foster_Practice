@@ -1,9 +1,11 @@
 ﻿using System.Numerics;
+using Arch.AOT.SourceGenerator;
 using Arch.Core;
 using Arch.Core.Extensions;
 
 namespace Engine.Source.Transform;
 
+[Component]
 public struct Transform
 {
     public Entity parent;
@@ -22,8 +24,17 @@ public struct Transform
     public Vector2 scale;
     
     public bool isDirty;
-    
-    
+
+    public Transform(Entity parent,Vector2 localPosition,Vector2 worldPosition,float rotation,Vector2 scale)
+    {
+        this.parent = parent;
+        this.localPosition = localPosition;
+        this.worldPosition = worldPosition;
+        this.rotation = rotation;
+        this.scale = scale;
+        children = new List<Entity>();
+        DirtyMake(ref this,true);
+    }
     
     /// <summary>
     /// 设置本地坐标后，local变了，也是相对父节点变化，延迟计算世界坐标
@@ -31,23 +42,18 @@ public struct Transform
     /// <param name="transform"></param>
     internal static void CalculateWorldPosition(ref Transform transform)
     {
-        if (transform.isDirty)
+        if (!transform.isDirty) return;
+        if (transform.parent != Entity.Null)
         {
-            if (transform.parent != Entity.Null)
-            {
-                ref var parentTransform = ref transform.parent.Get<Transform>();
-                if (parentTransform.isDirty)
-                {
-                    CalculateWorldPosition(ref parentTransform);
-                }
-                transform.worldPosition = parentTransform.worldPosition + transform.localPosition;
-            }
-            else
-            {
-                transform.worldPosition = transform.localPosition;
-            }
-            transform.isDirty = false;
+            ref var parentTransform = ref transform.parent.Get<Transform>();
+            CalculateWorldPosition(ref parentTransform);
+            transform.worldPosition = parentTransform.worldPosition + transform.localPosition;
         }
+        else
+        {
+            transform.worldPosition = transform.localPosition;
+        }
+        transform.isDirty = false;
     }
 
     /// <summary>
@@ -56,20 +62,18 @@ public struct Transform
     /// <param name="transform"></param>
     internal static void CalculateLocalPosition(ref Transform transform)
     {
-        if (transform.isDirty)
+        if (!transform.isDirty) return;
+        if (transform.parent != Entity.Null)
         {
-            if (transform.parent != Entity.Null)
-            {
-                ref var parentTransform = ref transform.parent.Get<Transform>();
-                CalculateWorldPosition(ref parentTransform);
-                transform.localPosition = transform.worldPosition - parentTransform.worldPosition;
-            }
-            else
-            {
-                transform.localPosition = transform.worldPosition;
-            }
-            transform.isDirty = false;
+            ref var parentTransform = ref transform.parent.Get<Transform>();
+            CalculateWorldPosition(ref parentTransform);
+            transform.localPosition = transform.worldPosition - parentTransform.worldPosition;
         }
+        else
+        {
+            transform.localPosition = transform.worldPosition;
+        }
+        transform.isDirty = false;
     }
     
     //更新所有根节点坐标
@@ -100,7 +104,7 @@ public struct Transform
         var children = transform.children;
         for (int i = 0; i < children.Count; i++)
         {
-            children[i].Get<Transform>().isDirty = true;
+            DirtyMake(ref children[i].Get<Transform>(),true);
         }
     }
 }

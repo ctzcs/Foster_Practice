@@ -10,7 +10,7 @@ public class GameApp : App
     {
         GraphicsDevice.VSync = true;
         Window.Resizable = true;
-        UpdateMode = UpdateMode.UnlockedStep();
+        UpdateMode = UpdateMode.FixedStep(60);
         //lifetime = new FrogSample(this);
         lifetime = new TestSample(this);
     }

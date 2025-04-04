@@ -1,7 +1,9 @@
 ﻿using System.Numerics;
+using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Engine.Source.Render;
+using Engine.Source.Transform;
 using Foster.Framework;
 using Transform = Engine.Source.Transform.Transform;
 
@@ -9,22 +11,88 @@ namespace Content.Test;
 
 public static class TestExt
 {
-    public static Entity CreateSimpleFrog(World world,Vector2 position, Vector2 size,Texture tex, Color color)
+    public static Entity CreateSimpleFrog(World world,Vector2 position, Vector2 size,Texture tex, Color color,int depth = 0)
     {
-        var ent = world.Create();
-        ent.Add(new Transform()
+        var ent = world.Create(
+            new Transform()
         {
             parent = Entity.Null,
             children = new(),
             localPosition = position,
             scale = size,
             isDirty = true
-        });
-        ent.Add(new SpriteRenderer()
+        },
+        new SpriteRenderer()
+          {
+              texture = tex,
+              color = color,
+          },
+        new SortingOrder()
         {
-            texture = tex,
-            color = color,
+            depth = depth
         });
+        
         return ent;
     }
+
+
+    public static Entity CreatLine(World world,Vector2 position, Vector2 size,Color color,float linewidth,int depth = 0)
+    {
+        var ent = world.Create(new Transform()
+            {
+                parent = Entity.Null,
+                children = new(),
+                localPosition = position,
+                scale = size,
+                isDirty = true
+            },
+            new LineRenderer()
+            {
+                line = new List<Vector2>(),
+                color = color,
+                lineWidth = linewidth,
+            },
+            new SortingOrder()
+            {
+                depth = depth
+            });
+        
+        return ent;
+    }
+    
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void SetParent(this Entity child, Entity parent)
+    {
+        if (parent == Entity.Null)
+        {
+            ref var childTransform = ref child.Get<Transform>();
+            var preParent = childTransform.parent;
+            if (preParent != Entity.Null)
+            {
+                if (parent.Has<Transform>())
+                {
+                    var parentTransform = preParent.Get<Transform>();
+                    if (parentTransform.children.Count <= 0)
+                    {
+                        parent.Remove<HasChild>();
+                    }
+                }
+                
+            }
+            child.Remove<HasParent>();
+            childTransform.parent = Entity.Null;
+            return;
+        }
+        if(parent.Has<Transform>()) 
+            parent.Get<Transform>().children.Add(child);
+        if(child.Has<Transform>())
+            child.Get<Transform>().parent = parent;
+        if(!child.Has<HasParent>()) child.Add<HasParent>();
+        if(!parent.Has<HasChild>())parent.Add<HasChild>();
+    }
+    
+    
+    
+    
 }

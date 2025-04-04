@@ -8,8 +8,8 @@ internal static class Program
         using var gameContent = new GameApp(new AppConfig(
             "Game",
             "Game",
-            1280,
-            720));
+            1920,
+            1080));
         gameContent.Run();
     }
 }

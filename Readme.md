@@ -10,8 +10,9 @@
     - Arch
   - 功能
     - 基于Transform的场景图
-    - UI系统
     - 渲染系统
+    - 动画系统
+    - UI系统
     - 粒子系统
     - 空间分区
     - 资源管理系统
@@ -27,5 +28,7 @@
 
 ### 打包发布
 - win-x64 `dotnet publish -r win-x64 -p:PublishSingleFile=true --self-contained true
-`
-  
+
+## 更新
+### v0.2.1
+- 加入人物按照路径移动

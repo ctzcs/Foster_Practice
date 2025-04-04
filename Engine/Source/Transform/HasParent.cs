@@ -4,10 +4,10 @@ using Arch.AOT.SourceGenerator;
 namespace Engine.Source.Transform;
 
 /// <summary>
-///如果有这个标签说明有child
-///用于找到Parent
+/// 用于找到根节点
+/// 如果挂上了这个节点说明有Parent
 /// </summary>
 [Component]
-public struct ParentOf
+public struct HasParent
 {
 }
