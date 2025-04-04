@@ -77,7 +77,7 @@ public class TestSample:ILifetime
             {
                 case "Frog":
                     var pos = ctx.Input.Mouse.Position;
-                    TestExt.CreateFrogCarrier(world, pos, texture, Color.Red,5);
+                    TestExt.CreateFrogCarrier(world, pos, texture, Color.Red,50);
                     count++;
                     break;
             }
