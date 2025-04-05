@@ -34,7 +34,7 @@ public partial class TransformSystem : BaseSystem<World, float>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void LeafTransform(ref Transform transform)
     {
-        Transform.CalculateWorldPosition(ref transform);
+        transform.UpdateTransform();
     }
     
     

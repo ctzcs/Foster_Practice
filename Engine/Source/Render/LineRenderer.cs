@@ -5,7 +5,7 @@ using Foster.Framework;
 namespace Engine.Source.Render;
 
 [Component]
-public struct LineRenderer:IRenderer
+public struct LineRenderer
 {
     public List<Vector2> line;
     public Color color;
@@ -22,11 +22,12 @@ public struct LineRenderer:IRenderer
             line.RemoveAt(line.Count - 1);
     }
 
-    public void Draw(Batcher batcher,in Vector2 worldPosition)
+    public void Draw(Batcher batcher,in Transform.Transform transform)
     {
         for (int i = 0; i < line.Count - 1; i++)
         {
-            batcher.Line(worldPosition + line[i],worldPosition + line[i + 1],lineWidth,color);
+            batcher.Line(transform.position + line[i],transform.position + line[i + 1],lineWidth,color);
+            
         }
     }
 }

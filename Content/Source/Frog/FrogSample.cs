@@ -1,10 +1,9 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿using System.Numerics;
 using System.Runtime.CompilerServices;
 using Engine.Source;
 using Foster.Framework;
 
-namespace Content;
+namespace Content.Frog;
 
 public class FrogSample:ILifetime
 {

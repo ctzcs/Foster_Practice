@@ -1,15 +1,22 @@
 ﻿using System.Numerics;
+using System.Runtime.CompilerServices;
 using Arch.AOT.SourceGenerator;
 using Foster.Framework;
 
 namespace Engine.Source.Render;
 [Component]
-public struct SpriteRenderer:IRenderer
+public struct SpriteRenderer
 {
     public Texture texture;
     public Color color;
-    public void Draw(Batcher batcher,in Vector2 worldPosition)
+    /// <summary>
+    /// 通过Texture的width/2和height/2找到中心点
+    /// </summary>
+    public Vector2 origin;
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Draw(Batcher batcher,in Transform.Transform transform)
     {
-        batcher.Image(texture, worldPosition, color);
+        batcher.Image(texture,transform.position,origin, transform.scale,transform.rad,color);
     }
 }

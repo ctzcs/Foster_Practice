@@ -2,15 +2,13 @@
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
-using Content.Test;
 using Engine.Source;
 using Engine.Source.Render;
 using Engine.Source.Transform;
 using Foster.Framework;
-using Transform = Engine.Source.Transform.Transform;
 
 
-namespace Content;
+namespace Content.Test;
 
 public class TestSample:ILifetime
 {
@@ -24,7 +22,6 @@ public class TestSample:ILifetime
     
     private FrameCounter frameCounter;
     private float deltaTime = 0;
-    private const int IterCount = 1000;
     private static int count = 0;
 
     private string state;
@@ -77,7 +74,8 @@ public class TestSample:ILifetime
             {
                 case "Frog":
                     var pos = ctx.Input.Mouse.Position;
-                    TestExt.CreateFrogCarrier(world, pos, texture, Color.Red,50);
+                    //TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,texture, Color.Red);
+                    TestExt.CreateFrogCarrier(world, pos,0,Vector2.One*2, texture, Color.Red,5);
                     count++;
                     break;
             }
@@ -90,8 +88,7 @@ public class TestSample:ILifetime
                 case "Line":
                     if (line == Entity.Null)
                     {
-                        line = TestExt.CreatLine(world,Vector2.Zero,Vector2.One,Color.Gray,5);
-                        
+                        line = TestExt.CreatLine(world,Vector2.Zero,0,Vector2.One,Color.Gray,5);
                     }
                     line.Get<LineRenderer>().AddPoint(ctx.Input.Mouse.Position);
                     break;

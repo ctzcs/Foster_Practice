@@ -26,9 +26,21 @@
   - 显示游戏运行的窗口
 
 
-### 打包发布
+## 功能设计
+
+### 资源管理系统
+- Sprite
+- Audio
+- Txt
+- 
+
+
+## 打包发布
 - win-x64 `dotnet publish -r win-x64 -p:PublishSingleFile=true --self-contained true
 
 ## 更新
 ### v0.2.1
 - 加入人物按照路径移动
+
+### v0.2.2
+- 加入旋转大小依赖，按照示例青蛙变为两倍大小

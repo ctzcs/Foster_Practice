@@ -61,7 +61,7 @@ public partial class FindLineSystem:BaseSystem<World,float>
                    var dir = (pos - transform.localPosition).Normalized();
                    if (Vector2.DistanceSquared(pos,transform.localPosition) > 2 )
                    {
-                       Transform.SetLocalPosition(ref transform, transform.localPosition + dir*speed);
+                       transform.SetLocalPosition(transform.localPosition + dir*speed);
                    }
                    else
                    {

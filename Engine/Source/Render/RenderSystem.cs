@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Numerics;
+using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
@@ -32,16 +33,29 @@ public partial class RenderSystem:BaseSystem<World,float>
     public override void AfterUpdate(in float t)
     {
         entities.Clear();
-        LineRenderQuery(world);
-        BuildRenderListQuery(world);
-        HandleRenderList();
+        LineRenderQuery(world);//先画线
+        //再画Sprite
+        BuildSpriteRenderListQuery(world);
+        HandleSpriteRenderList();
     }
     
+    
+    
+    
+
+    [Query]
+    [All<Transform.Transform,LineRenderer,SortingOrder>]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void LineRender(in Entity entity,in Transform.Transform transform, in SortingOrder sortingOrder)
+    {
+        ref var lineRenderer = ref entity.Get<LineRenderer>();
+        lineRenderer.Draw(batcher,in transform);
+    }
     
     [Query]
     [All<Transform.Transform,SpriteRenderer,SortingOrder>]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void BuildRenderList(in Entity entity,in SortingOrder sortingOrder)
+    public void BuildSpriteRenderList(in Entity entity,in SortingOrder sortingOrder)
     {
         entities.Add(new OrderRecord()
         {
@@ -50,18 +64,8 @@ public partial class RenderSystem:BaseSystem<World,float>
         });
     }
 
-
-    [Query]
-    [All<Transform.Transform,LineRenderer,SortingOrder>]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void LineRender(in Entity entity,in Transform.Transform transform, in SortingOrder sortingOrder)
-    {
-        ref var lineRenderer = ref entity.Get<LineRenderer>();
-        lineRenderer.Draw(batcher,transform.worldPosition);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    void HandleRenderList()
+    void HandleSpriteRenderList()
     {
         entities.Sort((a, b) => a.order - b.order);
         renderCount = 0;
@@ -70,7 +74,7 @@ public partial class RenderSystem:BaseSystem<World,float>
             var entity = entities[i].entity;
             ref var transform = ref entity.Get<Transform.Transform>();
             ref var spriteRenderer = ref entity.Get<SpriteRenderer>();
-            spriteRenderer.Draw(batcher,transform.worldPosition);
+            spriteRenderer.Draw(batcher,in transform);
             renderCount++;
             if (renderCount > BatchRenderCount )
             {
