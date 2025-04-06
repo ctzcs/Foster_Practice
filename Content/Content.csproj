@@ -22,4 +22,8 @@
         <ProjectReference Include="..\Engine\Engine.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ClCompile Include="Assets\Shader\Custom.hlsl" />
+    </ItemGroup>
+
 </Project>

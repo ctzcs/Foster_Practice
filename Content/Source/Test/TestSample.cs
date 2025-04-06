@@ -1,8 +1,7 @@
-﻿using System.Numerics;
-using Arch.Core;
-using Arch.Core.Extensions;
+﻿using Arch.Core;
 using Arch.System;
 using Engine.Source;
+using Engine.Source.Camera;
 using Engine.Source.Render;
 using Engine.Source.Transform;
 using Foster.Framework;
@@ -16,36 +15,33 @@ public class TestSample:ILifetime
     private readonly World world;
     private readonly Group<float> modules;
     private Rng rng = new(1337);
-    private readonly SpriteFont font;
-    private readonly Texture texture;
-    private Batcher batcher;
-    
+    private Resources res;
     private FrameCounter frameCounter;
     private float deltaTime = 0;
-    private static int count = 0;
-
-    private string state;
-    public Entity line = Entity.Null;
+    
     public TestSample(App ctx)
     {
         this.ctx = ctx;
         world = World.Create();
-        batcher = new Batcher(this.ctx.GraphicsDevice);
-        font = new SpriteFont(ctx.GraphicsDevice, Path.Join("Assets", "Fonts","monogram.ttf"), 32);
-        texture = new Texture(ctx.GraphicsDevice, new Image(Path.Join("Assets","Sprites", "frog_knight.png")));
+        res = new Resources(
+            new SpriteFont(ctx.GraphicsDevice, Path.Join("Assets", "Fonts","monogram.ttf"), 32),
+            new Texture(ctx.GraphicsDevice, new Image(Path.Join("Assets","Sprites", "frog_knight.png"))),
+            new Batcher(this.ctx.GraphicsDevice));
+        frameCounter = new FrameCounter();
         modules = new Group<float>("TestGroup",
+            new StateSystem(world,ctx,res,frameCounter),
             new RandomPositionSystem(world,rng),
             new FindLineSystem(world,rng),
+            new CameraMoveSystem(world,ctx),
             new TransformSystem(world),
-            new RenderSystem(world,batcher,ctx.Window));
-
-        frameCounter = new FrameCounter();
+            new RenderSystem(world,res.batcher,ctx.Window));
+        
     }
     
 
     public void Start()
     {
-        state = "Frog";
+        modules.Initialize();
     }
 
     public void Destroy()
@@ -55,91 +51,19 @@ public class TestSample:ILifetime
     public void Update()
     {
         deltaTime = ctx.Time.Delta;
-        if (ctx.Input.Keyboard.Pressed(Keys.Space))
-        {
-            switch (state)
-            {
-                case "Frog":
-                    state = "Line";
-                    break;
-                case "Line":
-                    state = "Frog";
-                    break;
-            }
-        }
-
-        if (ctx.Input.Mouse.LeftDown)
-        {
-            switch (state)
-            {
-                case "Frog":
-                    var pos = ctx.Input.Mouse.Position;
-                    //TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,texture, Color.Red);
-                    TestExt.CreateFrogCarrier(world, pos,0,Vector2.One*2, texture, Color.Red,5);
-                    count++;
-                    break;
-            }
-        }
-        
-        if (ctx.Input.Mouse.LeftPressed)
-        {
-            switch (state)
-            {
-                case "Line":
-                    if (line == Entity.Null)
-                    {
-                        line = TestExt.CreatLine(world,Vector2.Zero,0,Vector2.One,Color.Gray,5);
-                    }
-                    line.Get<LineRenderer>().AddPoint(ctx.Input.Mouse.Position);
-                    break;
-            }
-        }
-        else if (ctx.Input.Mouse.RightPressed)
-        {
-            switch (state)
-            {
-                case "Line":
-                    line.Get<LineRenderer>().RemoveLast();
-                    break;
-            }
-        }else if (ctx.Input.Keyboard.Pressed(Keys.S))
-        {
-            switch (state)
-            {
-                case "Line":
-                    line = Entity.Null;
-                    break;
-            }
-        }
-        
         modules.Update(in deltaTime);
     }
 
     public void Render()
     {
-        frameCounter.Update();
+        
         ctx.Window.Clear(Color.White);
         modules.AfterUpdate(in deltaTime);
-        batcher.Render(ctx.Window);
-        batcher.Clear();
-        batcher.Quad(new Quad(new Vector2(0,0),new Vector2(600,0),new Vector2(600,100),new Vector2(0,100)),Color.Green);
-        batcher.Text(font, $"Frog Group Count:{count} {frameCounter.FPS} FPS", new Vector2(8, 0), Color.Black);
-        batcher.Text(font, $"State:{state},Press Space To Change", new Vector2(8,20), Color.Black);
-        switch (state)
-        {
-            case "Line":
-                batcher.Text(font,"left mouse click add point,s cut down line",new Vector2(8,40),color:Color.Black);
-                break;
-            case "Frog":
-                batcher.Text(font,"left mouse press add frog",new Vector2(8,40),color:Color.Black);
-                break;
-        }
+        res.batcher.Render(ctx.Window);
+        res.batcher.Clear();
+        //文字显示
         
-        batcher.Render(ctx.Window);
-        batcher.Clear();
     }
-
-
-    
-    
 }
+
+

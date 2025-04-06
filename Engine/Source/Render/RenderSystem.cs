@@ -4,6 +4,7 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
 using Arch.System.SourceGenerator;
+using Engine.Source.Camera;
 using Foster.Framework;
 
 namespace Engine.Source.Render;
@@ -33,16 +34,43 @@ public partial class RenderSystem:BaseSystem<World,float>
     public override void AfterUpdate(in float t)
     {
         entities.Clear();
-        LineRenderQuery(world);//先画线
+        
+        BeforeEntityRenderQuery(world);
+        //先画线
+        LineRenderQuery(world);
         //再画Sprite
         BuildSpriteRenderListQuery(world);
         HandleSpriteRenderList();
+        AfterEntityRender();
+    }
+
+    [Query]
+    [All<Camera2D,Transform.Transform>]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void BeforeEntityRender(in Transform.Transform transform,in Camera2D camera)
+    {
+        //TODO 推入相机矩阵 相机中心坐标 + 抖动
+        // 让所有的非UI元素都会向相机相反方向移动，
+        // 放缩的时候都相对原点了
+        // 如果是正常的归一化，应该相对相机原点的地方，是坐标原点，所以缺一个NDC和投影坐标系
+        //batcher.PushMatrix(-transform.localPosition + camera.shake);
+        batcher.PushMatrix(-transform.position + camera.shake,
+            transform.scale / camera.scaleRate ,Vector2.Zero /* + camera.rect.Center*/,
+            transform.rad);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void AfterEntityRender()
+    {
+        batcher.PopMatrix();
     }
     
-    
-    
-    
-
+    /// <summary>
+    /// 线渲染
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <param name="transform"></param>
+    /// <param name="sortingOrder"></param>
     [Query]
     [All<Transform.Transform,LineRenderer,SortingOrder>]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -52,6 +80,11 @@ public partial class RenderSystem:BaseSystem<World,float>
         lineRenderer.Draw(batcher,in transform);
     }
     
+    /// <summary>
+    /// 精灵渲染
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <param name="sortingOrder"></param>
     [Query]
     [All<Transform.Transform,SpriteRenderer,SortingOrder>]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -63,7 +96,7 @@ public partial class RenderSystem:BaseSystem<World,float>
             order = sortingOrder.depth
         });
     }
-
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void HandleSpriteRenderList()
     {

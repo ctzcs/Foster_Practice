@@ -31,6 +31,10 @@ public static class Assets
 		}
 	}
 
+	/// <summary>
+	/// 打包资源
+	/// </summary>
+	/// <param name="gfx"></param>
 	public static void Load(GraphicsDevice gfx)
 	{
 		var spritesPath = Path.Join(AssetsPath, "Sprites");
@@ -107,6 +111,9 @@ public static class Assets
 		}
 	}
 
+	/// <summary>
+	/// 卸载资源
+	/// </summary>
 	public static void Unload()
 	{
 		Atlas?.Dispose();
@@ -118,6 +125,11 @@ public static class Assets
 		
 	}
 
+	/// <summary>
+	/// 获取Sprite
+	/// </summary>
+	/// <param name="name"></param>
+	/// <returns></returns>
 	public static Sprite? GetSprite(string name)
 	{
 		if (Sprites.TryGetValue(name, out var value))
@@ -126,6 +138,11 @@ public static class Assets
 	}
 	
 
+	/// <summary>
+	/// 获取子纹理
+	/// </summary>
+	/// <param name="name"></param>
+	/// <returns></returns>
 	public static Subtexture GetSubtexture(string name)
 	{
 		if (Subtextures.TryGetValue(name, out var value))

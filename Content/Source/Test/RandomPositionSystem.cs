@@ -2,6 +2,7 @@
 using Arch.Core;
 using Arch.System;
 using Arch.System.SourceGenerator;
+using Engine.Source.Camera;
 using Engine.Source.Transform;
 using Foster.Framework;
 using Transform = Engine.Source.Transform.Transform;
@@ -25,7 +26,7 @@ public partial class RandomPositionSystem:BaseSystem<World,float>
     
 
     [Query]
-    [All<Transform>,None<HasParent>]
+    [All<Transform>,None<HasParent,Camera2D>]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetRandomPosition(ref Transform transform)
     {

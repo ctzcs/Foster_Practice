@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Foster.Framework;
@@ -7,8 +8,6 @@ namespace Engine.Source.Transform;
 
 public static class TransformExt
 {
-    
-    
     
     /// <summary>
     /// 设置本地坐标后，local变了，也是相对父节点变化，延迟计算世界坐标
@@ -42,6 +41,8 @@ public static class TransformExt
             //transform.scale = parentTransform.scale * transform.localScale;
         }
         
+        //SRT
+        //TRS
         transform.localTransform = Matrix3x2.Multiply(transform.scaleMatrix,transform.rotationMatrix);
         transform.localTransform = Matrix3x2.Multiply(transform.localTransform,transform.translationMatrix);
 
@@ -101,7 +102,8 @@ public static class TransformExt
         transform.DirtyMake(ref transform,false);
         return ref transform;
     }*/
-
+    
+    
     public static ref Transform SetLocalPosition(ref this Transform transform, Vector2 localPosition)
     {
         transform.localPosition = localPosition;
@@ -109,10 +111,47 @@ public static class TransformExt
         return ref transform;
     }
 
-    public static ref Transform SetLocalRotation(ref this Transform transform, float localRotation)
+    public static ref Transform SetLocalRotation(ref this Transform transform, float localRad)
     {
-        transform.localRad = localRotation;
+        transform.localRad = localRad;
         transform.SetDirty(Transform.EDirtyType.RotationDirty);
         return ref transform;
+    }
+
+    public static ref Transform SetLocalScale(ref this Transform transform, Vector2 scale)
+    {
+        transform.localScale = scale;
+        transform.SetDirty(Transform.EDirtyType.ScaleDirty);
+        return ref transform;
+    }
+    
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void SetParent(this Entity child, Entity parent)
+    {
+        if (parent == Entity.Null)
+        {
+            ref var childTransform = ref child.Get<Transform>();
+            var preParent = childTransform.parent;
+            if (preParent != Entity.Null)
+            {
+                if (parent.Has<Transform>())
+                {
+                    var parentTransform = preParent.Get<Transform>();
+                    if (parentTransform.children.Count <= 0)
+                    {
+                        parent.Remove<HasChild>();
+                    }
+                }
+                
+            }
+            child.Remove<HasParent>();
+            childTransform.parent = Entity.Null;
+            return;
+        }
+        if(parent.Has<Transform>()) parent.Get<Transform>().children.Add(child);
+        if(child.Has<Transform>()) child.Get<Transform>().parent = parent;
+        if(!child.Has<HasParent>()) child.Add<HasParent>();
+        if(!parent.Has<HasChild>()) parent.Add<HasChild>();
     }
 }

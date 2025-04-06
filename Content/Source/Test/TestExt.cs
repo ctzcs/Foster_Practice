@@ -62,36 +62,7 @@ public static class TestExt
        
     }
     
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void SetParent(this Entity child, Entity parent)
-    {
-        if (parent == Entity.Null)
-        {
-            ref var childTransform = ref child.Get<Transform>();
-            var preParent = childTransform.parent;
-            if (preParent != Entity.Null)
-            {
-                if (parent.Has<Transform>())
-                {
-                    var parentTransform = preParent.Get<Transform>();
-                    if (parentTransform.children.Count <= 0)
-                    {
-                        parent.Remove<HasChild>();
-                    }
-                }
-                
-            }
-            child.Remove<HasParent>();
-            childTransform.parent = Entity.Null;
-            return;
-        }
-        if(parent.Has<Transform>()) 
-            parent.Get<Transform>().children.Add(child);
-        if(child.Has<Transform>())
-            child.Get<Transform>().parent = parent;
-        if(!child.Has<HasParent>()) child.Add<HasParent>();
-        if(!parent.Has<HasChild>())parent.Add<HasChild>();
-    }
+    
     
     
     
