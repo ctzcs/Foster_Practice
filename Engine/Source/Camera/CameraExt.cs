@@ -33,9 +33,8 @@ public class CameraExt
         var camera = CameraMoveSystem.Camera;
         ref var transform = ref camera.Get<Transform.Transform>();
         ref var camera2D = ref camera.Get<Camera2D>();
-        //0,0为原点
-        var v1 = Matrix3x2.CreateTranslation(screenPosition.X + transform.position.X, 
-            screenPosition.Y + transform.position.Y);
+        //0,0为原点,偏移相机Center
+        var v1 = Matrix3x2.CreateTranslation(screenPosition + transform.position);
         
         var v2 = Matrix3x2.Multiply(v1, Matrix3x2.CreateRotation(-transform.rad));
 

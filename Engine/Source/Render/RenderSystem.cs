@@ -54,7 +54,7 @@ public partial class RenderSystem:BaseSystem<World,float>
         // 放缩的时候都相对原点了
         // 如果是正常的归一化，应该相对相机原点的地方，是坐标原点，所以缺一个NDC和投影坐标系
         //batcher.PushMatrix(-transform.localPosition + camera.shake);
-        batcher.PushMatrix(-transform.position + camera.shake,
+        batcher.PushMatrix(-transform.position + camera.shake /*+ camera.rect.Center*/,
             transform.scale / camera.scaleRate ,Vector2.Zero /* + camera.rect.Center*/,
             transform.rad);
     }

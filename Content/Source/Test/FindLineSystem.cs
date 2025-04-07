@@ -4,6 +4,7 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
 using Arch.System.SourceGenerator;
+using Engine.Source.Other;
 using Engine.Source.Render;
 using Engine.Source.Transform;
 using Foster.Framework;
@@ -15,7 +16,8 @@ public partial class FindLineSystem:BaseSystem<World,float>
 {
     private World world;
     private Rng rng;
-    private float speed = 5;
+    private float speed = 200;
+    private float deltaTime;
     public FindLineSystem(World world,Rng rng) : base(world)
     {
         this.world = world;
@@ -25,6 +27,7 @@ public partial class FindLineSystem:BaseSystem<World,float>
 
     public override void Update(in float t)
     {
+        deltaTime = t;
         _lineEntities.Clear();
         AllLineEntitiesQuery(world);
         GetTransformQuery(world);
@@ -41,9 +44,9 @@ public partial class FindLineSystem:BaseSystem<World,float>
     }
 
     [Query]
-    [All<Transform, SpriteRenderer>, None<HasParent>]
+    [All<Transform,CheckBox,SpriteRenderer>, None<HasParent>]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void GetTransform(in Entity entity,ref Transform transform)
+    public void GetTransform(in Entity entity,ref Transform transform,in CheckBox box)
     {
         if (_lineEntities.Count == 0)
         {
@@ -59,9 +62,10 @@ public partial class FindLineSystem:BaseSystem<World,float>
                 {
                    var pos = lineRenderer.line[followLine.nextIndex];
                    var dir = (pos - transform.localPosition).Normalized();
-                   if (Vector2.DistanceSquared(pos,transform.localPosition) > 2 )
+                   //可能出现由于速度太快，导致超出线的位置的情况
+                   if (!box.rect.Contains(pos) /*Vector2.DistanceSquared(pos,transform.localPosition) > 1*/ ) 
                    {
-                       transform.SetLocalPosition(transform.localPosition + dir*speed);
+                       transform.SetLocalPosition(transform.localPosition + deltaTime*dir*speed);
                    }
                    else
                    {
@@ -73,6 +77,11 @@ public partial class FindLineSystem:BaseSystem<World,float>
                            followLine.nextIndex = 0;
                        }
                    }
+                }else
+                {
+                    var index = rng.Int(0, _lineEntities.Count);
+                    followLine.line = _lineEntities[index];
+                    followLine.nextIndex = 0;
                 }
             }
         }

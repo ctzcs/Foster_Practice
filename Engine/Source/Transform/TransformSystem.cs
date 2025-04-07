@@ -2,6 +2,7 @@
 using Arch.Core;
 using Arch.System;
 using Arch.System.SourceGenerator;
+using Engine.Source.Other;
 
 namespace Engine.Source.Transform;
 
@@ -35,6 +36,14 @@ public partial class TransformSystem : BaseSystem<World, float>
     public void LeafTransform(ref Transform transform)
     {
         transform.UpdateTransform();
+    }
+
+    [Query]
+    [All<Transform,CheckBox>]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void UpdateCheckBox(ref Transform transform, ref CheckBox checkBox)
+    {
+        checkBox.rect.Center = transform.position;
     }
     
     

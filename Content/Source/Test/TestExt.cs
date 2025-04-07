@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.Core.Extensions;
+using Engine.Source.Other;
 using Engine.Source.Render;
 using Engine.Source.Transform;
 using Foster.Framework;
@@ -14,7 +15,8 @@ public static class TestExt
     public static Entity CreateSimpleFrog(World world,Vector2 position,float rotation ,Vector2 size,Texture tex, Color color,int depth = 0)
     {
         var ent = world.Create(
-            new Transform(Entity.Null,position,rotation,size),
+            new Transform(Entity.Null, position, rotation, size),
+            new CheckBox() { rect = new Rect(position, 4, 4) },
         new SpriteRenderer()
           {
               texture = tex,

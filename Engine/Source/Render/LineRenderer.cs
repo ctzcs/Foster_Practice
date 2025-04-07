@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Arch.AOT.SourceGenerator;
+using Arch.Core;
 using Foster.Framework;
 
 namespace Engine.Source.Render;
@@ -10,6 +11,7 @@ public struct LineRenderer
     public List<Vector2> line;
     public Color color;
     public float lineWidth;
+    
 
     public void AddPoint(Vector2 point)
     {
@@ -24,6 +26,7 @@ public struct LineRenderer
 
     public void Draw(Batcher batcher,in Transform.Transform transform)
     {
+        
         for (int i = 0; i < line.Count - 1; i++)
         {
             batcher.Line(transform.position + line[i],transform.position + line[i + 1],lineWidth,color);

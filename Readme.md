@@ -43,7 +43,7 @@
 
 
 ## 打包发布
-- win-x64 `dotnet publish -r win-x64 -p:PublishSingleFile=true --self-contained true
+- win-x64 `dotnet publish -r win-x64 -p:PublishSingleFile=true --self-contained true`
 
 ## 更新
 ### v0.2.1

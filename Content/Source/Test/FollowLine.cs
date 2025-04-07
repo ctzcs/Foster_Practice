@@ -1,4 +1,5 @@
-﻿using Arch.AOT.SourceGenerator;
+﻿using System.Numerics;
+using Arch.AOT.SourceGenerator;
 using Arch.Core;
 
 namespace Content.Test;

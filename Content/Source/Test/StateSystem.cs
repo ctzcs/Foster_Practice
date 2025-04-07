@@ -72,7 +72,8 @@ public partial class StateSystem:BaseSystem<World,float>
                     {
                         line = TestExt.CreatLine(world,Vector2.Zero,0,Vector2.One,Color.Gray,5);
                     }
-                    line.Get<LineRenderer>().AddPoint(CameraExt.ScreenToWorld(ctx.Input.Mouse.Position));
+                    ref var render = ref line.Get<LineRenderer>();
+                    render.AddPoint(CameraExt.ScreenToWorld(ctx.Input.Mouse.Position));
                     break;
             }
         }
@@ -81,7 +82,10 @@ public partial class StateSystem:BaseSystem<World,float>
             switch (state)
             {
                 case "Line":
-                    line.Get<LineRenderer>().RemoveLast();
+                    if (line != Entity.Null)
+                    {
+                        line.Get<LineRenderer>().RemoveLast();
+                    }
                     break;
             }
         }else if (ctx.Input.Keyboard.Pressed(Keys.S))
