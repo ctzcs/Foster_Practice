@@ -12,14 +12,15 @@ namespace Content.Test;
 
 public static class TestExt
 {
-    public static Entity CreateSimpleFrog(World world,Vector2 position,float rotation ,Vector2 size,Texture tex, Color color,int depth = 0)
+    public static Entity CreateSimpleFrog(World world,Vector2 position,float rotation ,Vector2 size,Subtexture tex, Color color,int depth = 0)
     {
         var ent = world.Create(
+            new Cha(),
             new Transform(Entity.Null, position, rotation, size),
-            new CheckBox() { rect = new Rect(position, 4, 4) },
+            new CheckBox() { rect = new Rect(position, 16, 16) },
         new SpriteRenderer()
           {
-              texture = tex,
+              subtexture = tex,
               color = color,
               origin = new (tex.Width/2f,tex.Height/2f),
           },
@@ -32,6 +33,28 @@ public static class TestExt
     }
 
 
+    public static Entity CreateBuilding(World world, Vector2 position, float rotation, Vector2 size, Subtexture tex,
+        Color color, int depth = 0)
+    {
+        var ent = world.Create(
+            new Building(),
+            new Transform(Entity.Null, position, rotation, size),
+            new CheckBox() { rect = new Rect(position, 32, 32) },
+            new SpriteRenderer()
+            {
+                subtexture = tex,
+                color = color,
+                origin = new (tex.Width/2f,tex.Height/2f),
+            },
+            new SortingOrder()
+            {
+                depth = depth
+            });
+        
+        return ent;
+    }
+    
+    
     public static Entity CreatLine(World world,Vector2 position,float rotation ,Vector2 size,Color color,float linewidth,int depth = 0)
     {
         var ent = world.Create(new Transform(Entity.Null,position,rotation,size),
@@ -49,7 +72,7 @@ public static class TestExt
         return ent;
     }
 
-    public static void CreateFrogCarrier(World world,Vector2 pos,float rotation,Vector2 size,Texture texture,Color color,int wholeCount)
+    public static void CreateFrogCarrier(World world,Vector2 pos,float rotation,Vector2 size,Subtexture texture,Color color,int wholeCount)
     {
         var root = CreateSimpleFrog
             (world, pos,rotation ,size, texture, color);
@@ -57,7 +80,7 @@ public static class TestExt
         for (int i = 0; i < wholeCount - 1; i++)
         {
             var e = CreateSimpleFrog
-                (world, new Vector2(0, -10), 0,Vector2.One, texture,new Color(0,1,0,0.5f), i);
+                (world, new Vector2(0, -10), 0,Vector2.One,texture,new Color(0,1,0,0.5f), i);
             e.SetParent(last);
             last = e;
         }

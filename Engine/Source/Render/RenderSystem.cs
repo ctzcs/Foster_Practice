@@ -5,6 +5,7 @@ using Arch.Core.Extensions;
 using Arch.System;
 using Arch.System.SourceGenerator;
 using Engine.Source.Camera;
+using Engine.Source.Other;
 using Foster.Framework;
 
 namespace Engine.Source.Render;
@@ -41,6 +42,10 @@ public partial class RenderSystem:BaseSystem<World,float>
         //再画Sprite
         BuildSpriteRenderListQuery(world);
         HandleSpriteRenderList();
+#if DEBUG
+        RenderDebugRectQuery(world);
+#endif
+        
         AfterEntityRender();
     }
 
@@ -54,9 +59,19 @@ public partial class RenderSystem:BaseSystem<World,float>
         // 放缩的时候都相对原点了
         // 如果是正常的归一化，应该相对相机原点的地方，是坐标原点，所以缺一个NDC和投影坐标系
         //batcher.PushMatrix(-transform.localPosition + camera.shake);
-        batcher.PushMatrix(-transform.position + camera.shake /*+ camera.rect.Center*/,
-            transform.scale / camera.scaleRate ,Vector2.Zero /* + camera.rect.Center*/,
-            transform.rad);
+        /*batcher.PushMatrix(-transform.position  + camera.shake,
+            transform.scale / camera.scaleRate ,camera.rect.Center, 
+            transform.rad);*/
+        // 计算视口中心偏移
+        var originOffset = camera.rect.Center;
+        // 渲染系统应用矩阵时：
+        batcher.PushMatrix(
+            -transform.position + camera.shake, // 将世界坐标原点对齐到视口中心
+            transform.scale / camera.scaleRate, // 缩放
+            originOffset,                       // 旋转中心保持与视口中心一致 
+            transform.rad
+        );
+        
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -116,6 +131,16 @@ public partial class RenderSystem:BaseSystem<World,float>
                 batcher.Clear();
             }
         }
-        
+        /*batcher.Render(window);
+        batcher.Clear();*/
+    }
+
+
+    [Query]
+    [All<Transform.Transform,CheckBox>]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    void RenderDebugRect(in CheckBox box)
+    {
+        batcher.QuadLine(box.rect.TopLeft,box.rect.TopRight,box.rect.BottomRight,box.rect.BottomLeft,0.5f,Color.Red);
     }
 }

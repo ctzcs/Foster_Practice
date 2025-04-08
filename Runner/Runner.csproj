@@ -24,5 +24,7 @@
         <SelfContained>true</SelfContained> <!-- 强制包含所有依赖 -->
         
     </PropertyGroup>
+
+    
     
 </Project>

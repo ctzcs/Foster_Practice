@@ -7,7 +7,7 @@ namespace Engine.Source.Render;
 [Component]
 public struct SpriteRenderer
 {
-    public Texture texture;
+    public Subtexture subtexture;
     public Color color;
     /// <summary>
     /// 通过Texture的width/2和height/2找到中心点
@@ -17,6 +17,6 @@ public struct SpriteRenderer
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Draw(Batcher batcher,in Transform.Transform transform)
     {
-        batcher.Image(texture,transform.position,origin, transform.scale,transform.rad,color);
+        batcher.Image(subtexture,transform.position,origin, transform.scale,transform.rad,color);
     }
 }

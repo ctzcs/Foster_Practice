@@ -6,15 +6,14 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <!-- Debug 配置追加符号 -->
+        <DefineConstants>$(DefineConstants);MyDebug</DefineConstants>
+    </PropertyGroup>
+    
     <ItemGroup>
         <None Update="Assets\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\Sprites\frog_knight.png">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Assets\Fonts\monogram.ttf">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 

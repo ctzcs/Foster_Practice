@@ -41,16 +41,27 @@ public static class Assets
 		var spriteFiles = new Dictionary<string, Aseprite>();
 
 		// 加载主要字体文件
-		Font = new SpriteFont(gfx, Path.Join(AssetsPath, "Fonts", "monogram.ttf"), 8);
+		Font = new SpriteFont(gfx, Path.Join(AssetsPath, "Fonts", "monogram.ttf"), 32);
 		Font.LineGap = 4;
 
 		// 获取所有的ase结尾的sprites文件
 		foreach (var file in Directory.EnumerateFiles(spritesPath, "*.ase", SearchOption.AllDirectories))
 		{
 			var name = Path.ChangeExtension(Path.GetRelativePath(spritesPath, file), null);
-			var ase = new Aseprite(file);
-			if (ase.Frames.Length > 0)
-				spriteFiles.Add(name, ase);
+			Log.Info(name);
+			try
+			{
+				var ase = new Aseprite(file);
+			
+				if (ase.Frames.Length > 0)
+					spriteFiles.Add(name, ase);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				throw;
+			}
+			
 		}
 		
 		// 打包所有的sprites

@@ -1,9 +1,10 @@
-﻿using Arch.Bus;
+﻿/*
+using Arch.Bus;
 using Foster.Framework;
 
 namespace Content.Test;
 
-/*public struct SomeTest
+public struct SomeTest
 {
     public string name;
 
@@ -27,5 +28,6 @@ public static class SomeTestHandler
     {
         Log.Info("测试");
     }
-}*/
+}
+*/
 

@@ -16,10 +16,17 @@ public partial class StateSystem:BaseSystem<World,float>
     private Resources res;
     private FrameCounter frameCounter;
     private float stateEase = 1;
-    private string state;
+    private EState state;
     private static int count = 0;
     
     public Entity line = Entity.Null;
+    
+    public enum EState
+    {
+        Frog,
+        Line,
+        Building,
+    }
     
     public StateSystem(World world,App app,Resources res,FrameCounter frameCounter) : base(world)
     {
@@ -31,72 +38,79 @@ public partial class StateSystem:BaseSystem<World,float>
 
     public override void Initialize()
     {
-        state = "Frog";
+        state = EState.Frog;
     }
 
 
     public override void Update(in float t)
     {
-        if (ctx.Input.Keyboard.Pressed(Keys.Space))
+        
+        switch (state)
         {
-            switch (state)
-            {
-                case "Frog":
-                    state = "Line";
-                    break;
-                case "Line":
-                    state = "Frog";
-                    break;
-            }
-        }
-
-        if (ctx.Input.Mouse.LeftDown)
-        {
-            switch (state)
-            {
-                case "Frog":
+            case EState.Frog:
+                if (ctx.Input.Keyboard.Pressed(Keys.Space))
+                {
+                    state = EState.Line;
+                }
+                
+                if (ctx.Input.Mouse.LeftDown)
+                {
                     var pos = CameraExt.ScreenToWorld(ctx.Input.Mouse.Position);
                     //TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,texture, Color.Red);
-                    TestExt.CreateFrogCarrier(world, pos,0,Vector2.One*2, res.texture, Color.Red,5);
+                    var frog = Engine.Source.Asset.Assets.GetSubtexture("frog/0");
+                    TestExt.CreateFrogCarrier(world, pos,0,Vector2.One,frog , Color.Red,5);
                     count++;
-                    break;
-            }
-        }
-        
-        if (ctx.Input.Mouse.LeftPressed)
-        {
-            switch (state)
-            {
-                case "Line":
+                }
+                
+                break;
+            case EState.Line:
+                if (ctx.Input.Keyboard.Pressed(Keys.Space))
+                {
+                    state = EState.Building;
+                }
+                
+                if (ctx.Input.Mouse.LeftPressed)
+                {
                     if (line == Entity.Null)
                     {
                         line = TestExt.CreatLine(world,Vector2.Zero,0,Vector2.One,Color.Gray,5);
                     }
                     ref var render = ref line.Get<LineRenderer>();
                     render.AddPoint(CameraExt.ScreenToWorld(ctx.Input.Mouse.Position));
-                    break;
-            }
-        }
-        else if (ctx.Input.Mouse.RightPressed)
-        {
-            switch (state)
-            {
-                case "Line":
+                }
+                else if (ctx.Input.Mouse.RightPressed)
+                {
                     if (line != Entity.Null)
                     {
                         line.Get<LineRenderer>().RemoveLast();
                     }
-                    break;
-            }
-        }else if (ctx.Input.Keyboard.Pressed(Keys.S))
-        {
-            switch (state)
-            {
-                case "Line":
+                    
+                }else if (ctx.Input.Keyboard.Pressed(Keys.S))
+                {
                     line = Entity.Null;
-                    break;
-            }
+                }
+                
+                break;
+            case EState.Building:
+                if (ctx.Input.Keyboard.Pressed(Keys.Space))
+                {
+                    state = EState.Frog;
+                }
+                
+                if (ctx.Input.Mouse.LeftDown)
+                {
+                    var pos = CameraExt.ScreenToWorld(ctx.Input.Mouse.Position);
+                    //TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,texture, Color.Red);
+                    var building = Engine.Source.Asset.Assets.GetSubtexture("bd/0");
+                    TestExt.CreateBuilding(world, pos,0,Vector2.One * 5, building, Color.Red,1);
+                }
+                break;
         }
+        
+
+        
+        
+        
     }
 
     public override void AfterUpdate(in float t)
@@ -108,11 +122,14 @@ public partial class StateSystem:BaseSystem<World,float>
         res.batcher.Text(res.font, $"State:{state},Press Space To Change", new Vector2(8,20), Color.Black);
         switch (state)
         {
-            case "Line":
+            case EState.Line:
                 res.batcher.Text(res.font,"left mouse click add point,s cut down line",new Vector2(8,40),color:Color.Black);
                 break;
-            case "Frog":
+            case EState.Frog:
                 res.batcher.Text(res.font,"left mouse press add frog",new Vector2(8,40),color:Color.Black);
+                break;
+            case EState.Building:
+                res.batcher.Text(res.font,"left mouse press add building",new Vector2(8,40),color:Color.Black);
                 break;
         }
         res.batcher.Render(ctx.Window);

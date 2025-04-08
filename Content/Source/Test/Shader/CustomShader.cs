@@ -1,8 +1,7 @@
 ﻿using Engine.Source.Utility;
 using Foster.Framework;
 
-
-namespace Content.Assets.Shader;
+namespace Content.Test.Shader;
 
 public class CustomShader(GraphicsDevice graphicsDevice):
     Foster.Framework.Shader(graphicsDevice,GetCreateInfo(graphicsDevice),"Custom")

@@ -1,4 +1,5 @@
-﻿using Arch.Core;
+﻿using Arch.Bus;
+using Arch.Core;
 using Arch.System;
 using Engine.Source;
 using Engine.Source.Camera;
@@ -23,9 +24,11 @@ public class TestSample:ILifetime
     {
         this.ctx = ctx;
         world = World.Create();
+        
+        Engine.Source.Asset.Assets.Load(ctx.GraphicsDevice);
         res = new Resources(
-            new SpriteFont(ctx.GraphicsDevice, Path.Join("Assets", "Fonts","monogram.ttf"), 32),
-            new Texture(ctx.GraphicsDevice, new Image(Path.Join("Assets","Sprites", "frog_knight.png"))),
+            Engine.Source.Asset.Assets.Font,
+            Engine.Source.Asset.Assets.Atlas,
             new Batcher(this.ctx.GraphicsDevice));
         frameCounter = new FrameCounter();
         modules = new Group<float>("TestGroup",

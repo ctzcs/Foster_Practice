@@ -4,8 +4,8 @@ namespace Content.Test;
 
 public class Resources
 {
-    public readonly SpriteFont font;
-    public readonly Texture texture;
+    public readonly SpriteFont? font;
+    public readonly Texture? texture;
     public Batcher batcher;
 
     public Resources(SpriteFont font, Texture texture,Batcher batcher)

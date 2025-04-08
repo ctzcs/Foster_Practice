@@ -4,6 +4,7 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
 using Arch.System.SourceGenerator;
+using Content.Frog;
 using Engine.Source.Other;
 using Engine.Source.Render;
 using Engine.Source.Transform;
@@ -44,7 +45,7 @@ public partial class FindLineSystem:BaseSystem<World,float>
     }
 
     [Query]
-    [All<Transform,CheckBox,SpriteRenderer>, None<HasParent>]
+    [All<Transform,CheckBox,SpriteRenderer,Cha>, None<HasParent>]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void GetTransform(in Entity entity,ref Transform transform,in CheckBox box)
     {
