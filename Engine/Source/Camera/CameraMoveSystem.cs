@@ -68,10 +68,10 @@ public partial class CameraMoveSystem:BaseSystem<World,float>
 
         if (ctx.Input.Mouse.Wheel.Y < 0)
         {
-            camera.scaleRate += deltaTime * scaleSpeed;
+            camera.SetScaleRate(deltaTime * scaleSpeed);
         }else if (ctx.Input.Mouse.Wheel.Y > 0)
         {
-            camera.scaleRate -= deltaTime * scaleSpeed;
+            camera.SetScaleRate(-deltaTime * scaleSpeed);
         }
 
         if (ctx.Input.Keyboard.PressedOrRepeated(Keys.E))

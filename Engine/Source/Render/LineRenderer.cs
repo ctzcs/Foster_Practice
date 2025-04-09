@@ -30,7 +30,6 @@ public struct LineRenderer
         for (int i = 0; i < line.Count - 1; i++)
         {
             batcher.Line(transform.position + line[i],transform.position + line[i + 1],lineWidth,color);
-            
         }
     }
 }

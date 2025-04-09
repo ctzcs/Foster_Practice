@@ -18,7 +18,7 @@ public partial class RenderSystem:BaseSystem<World,float>
     private Window window;
     private int renderCount = 0;
     private readonly List<OrderRecord> entities = new(150000);
-    
+    private Matrix3x2 transformMatrix;
     public struct OrderRecord
     {
        public Entity entity;
@@ -36,8 +36,9 @@ public partial class RenderSystem:BaseSystem<World,float>
     public override void AfterUpdate(in float t)
     {
         entities.Clear();
-        
+
         BeforeEntityRenderQuery(world);
+        batcher.PushMatrix(transformMatrix);
         //先画线
         LineRenderQuery(world);
         //再画Sprite
@@ -46,8 +47,6 @@ public partial class RenderSystem:BaseSystem<World,float>
 #if DEBUG
         RenderDebugRectQuery(world);
 #endif
-        
-        AfterEntityRender();
     }
 
     [Query]
@@ -73,20 +72,18 @@ public partial class RenderSystem:BaseSystem<World,float>
             v1
         );*/
         
-        batcher.PushMatrix(
-            camera.rect.Center,
+        transformMatrix = Foster.Framework.Transform.CreateMatrix(camera.rect.Center,
+            -transform.position, 
             transform.scale / camera.scaleRate,
-            -transform.position,
-            -transform.rad
-        );
-        
+            -transform.rad);
+        // batcher.PushMatrix(
+        //     camera.rect.Center,
+        //     transform.scale / camera.scaleRate,
+        //     -transform.position,
+        //     -transform.rad
+        // );
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AfterEntityRender()
-    {
-        batcher.PopMatrix();
-    }
+    
     
     /// <summary>
     /// 线渲染
@@ -144,7 +141,9 @@ public partial class RenderSystem:BaseSystem<World,float>
             {
                 renderCount = 0;
                 batcher.Render(window);
+                batcher.PopMatrix();
                 batcher.Clear();
+                batcher.PushMatrix(transformMatrix);
             }
         }
         /*batcher.Render(window);

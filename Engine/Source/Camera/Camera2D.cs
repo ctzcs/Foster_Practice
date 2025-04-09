@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Arch.AOT.SourceGenerator;
+using Engine.Source.Utility;
 using Foster.Framework;
 namespace Engine.Source.Camera;
 [Component]
@@ -11,6 +12,13 @@ public struct Camera2D
     public Rect rect;
     public float scaleRate;
     public Vector2 shake;
+
+
+    public void SetScaleRate(float scaleRateChange)
+    {
+        scaleRate += scaleRateChange;
+        scaleRate = Calc.Clamp(scaleRate, 0.1f, 10f);
+    }
     
 }
 
