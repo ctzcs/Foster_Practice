@@ -5,7 +5,6 @@ using Arch.System;
 using Engine.Source.Camera;
 using Engine.Source.Render;
 using Foster.Framework;
-using Transform = Engine.Source.Transform.Transform;
 
 namespace Content.Test;
 
@@ -102,7 +101,10 @@ public partial class StateSystem:BaseSystem<World,float>
                     var pos = CameraExt.ScreenToWorld(ctx.Input.Mouse.Position);
                     //TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,texture, Color.Red);
                     var building = Engine.Source.Asset.Assets.GetSubtexture("bd/0");
-                    TestExt.CreateBuilding(world, pos,0,Vector2.One * 5, building, Color.Red,1);
+                    TestExt.CreateBuilding(world, Vector2.Zero, 0,Vector2.One * 5, building, Color.Red,1);
+                    
+                    TestExt.CreateBuilding(world, ctx.Window.Size/2, 0,Vector2.One * 5, building, Color.Blue,1);
+                    
                 }
                 break;
         }
@@ -132,6 +134,9 @@ public partial class StateSystem:BaseSystem<World,float>
                 res.batcher.Text(res.font,"left mouse press add building",new Vector2(8,40),color:Color.Black);
                 break;
         }
+        res.batcher.CircleLine(Vector2.Zero,20,3,10,Color.Black);
+        res.batcher.CircleLine(ctx.Window.SizeInPixels/2f,20,3,10,Color.Red);
+        res.batcher.CircleLine(ctx.Window.SizeInPixels,20,3,10,Color.Black);
         res.batcher.Render(ctx.Window);
         res.batcher.Clear();
     }

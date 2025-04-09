@@ -3,6 +3,7 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using Engine.Source.Render;
 using Foster.Framework;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Engine.Source.Camera;
 
@@ -34,18 +35,17 @@ public class CameraExt
         ref var transform = ref camera.Get<Transform.Transform>();
         ref var camera2D = ref camera.Get<Camera2D>();
         //0,0为原点,偏移相机Center
-        
-        
-        var v1 = Matrix3x2.CreateTranslation(screenPosition + transform.position);
-        
-        
-        //var v11 = Matrix3x2.Multiply(v1,v)
-        
-        var v2 = Matrix3x2.Multiply(v1, Matrix3x2.CreateRotation(-transform.rad));
 
-        var v3 = Matrix3x2.Multiply(v2,Matrix3x2.CreateScale(Vector2.One * camera2D.scaleRate));
+        var mat = Foster.Framework.Transform.CreateMatrix(camera2D.rect.Center,
+            -transform.position,
+            transform.scale / camera2D.scaleRate,
+            -transform.rad);
+
+        var screenPos = Matrix3x2.CreateTranslation(screenPosition);
         
-        return new Vector2(v3.M31, v3.M32);
+        Matrix3x2.Invert(mat,out var invert);
+        var result = Matrix3x2.Multiply(screenPos,invert);
+        return new Vector2(result.M31, result.M32);
         
     }
 

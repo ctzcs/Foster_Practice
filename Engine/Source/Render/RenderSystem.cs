@@ -22,6 +22,7 @@ public partial class RenderSystem:BaseSystem<World,float>
     public struct OrderRecord
     {
        public Entity entity;
+       public int layer;
        public int order;
     }
     
@@ -59,16 +60,23 @@ public partial class RenderSystem:BaseSystem<World,float>
         // 放缩的时候都相对原点了
         // 如果是正常的归一化，应该相对相机原点的地方，是坐标原点，所以缺一个NDC和投影坐标系
         //batcher.PushMatrix(-transform.localPosition + camera.shake);
-        /*batcher.PushMatrix(-transform.position  + camera.shake,
-            transform.scale / camera.scaleRate ,camera.rect.Center, 
-            transform.rad);*/
-        // 计算视口中心偏移
-        var originOffset = camera.rect.Center;
+        
         // 渲染系统应用矩阵时：
+        
+
+        /*var v1 = Foster.Framework.Transform.CreateMatrix(camera.rect.Center,
+            -transform.position, 
+            transform.scale / camera.scaleRate,
+            -transform.rad);
+        
+        batcher.PushMatrix( 
+            v1
+        );*/
+        
         batcher.PushMatrix(
-            -transform.position+camera.shake, // 将世界坐标原点对齐到视口中心
-            transform.scale / camera.scaleRate, // 缩放
-            Vector2.Zero,                       // 旋转中心保持与视口中心一致 
+            camera.rect.Center,
+            transform.scale / camera.scaleRate,
+            -transform.position,
             -transform.rad
         );
         
@@ -108,6 +116,7 @@ public partial class RenderSystem:BaseSystem<World,float>
         entities.Add(new OrderRecord()
         {
             entity = entity,
+            layer = sortingOrder.layer,
             order = sortingOrder.depth
         });
     }
@@ -115,7 +124,14 @@ public partial class RenderSystem:BaseSystem<World,float>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void HandleSpriteRenderList()
     {
-        entities.Sort((a, b) => a.order - b.order);
+        entities.Sort((a, b) =>
+        {
+            if (a.layer == b.layer)
+            {
+                return a.order - b.order;
+            }
+            return a.layer - b.layer;
+        });
         renderCount = 0;
         for (int i = 0; i < entities.Count; i++)
         {

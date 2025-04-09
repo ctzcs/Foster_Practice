@@ -13,3 +13,6 @@ public struct Camera2D
     public Vector2 shake;
     
 }
+
+
+//TODO Camera2D 还是有问题，打算抄一个Camera,然后改写，看能不能用

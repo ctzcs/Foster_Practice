@@ -1,6 +1,7 @@
 ﻿using Content.Test;
 using Engine.Source;
 using Foster.Framework;
+using SDL3;
 
 namespace Content;
 
@@ -18,7 +19,6 @@ public class GameApp : App
 
     protected override void Startup()
     {
-        
         lifetime.Start();
     }
 

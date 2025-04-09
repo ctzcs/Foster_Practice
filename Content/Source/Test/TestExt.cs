@@ -26,6 +26,7 @@ public static class TestExt
           },
         new SortingOrder()
         {
+            layer = ELayer.Frog.GetId(),
             depth = depth
         });
         
@@ -48,6 +49,7 @@ public static class TestExt
             },
             new SortingOrder()
             {
+                layer = ELayer.Building.GetId(),
                 depth = depth
             });
         
@@ -66,6 +68,7 @@ public static class TestExt
             },
             new SortingOrder()
             {
+                layer = ELayer.Line.GetId(),
                 depth = depth
             });
         
