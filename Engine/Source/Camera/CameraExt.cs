@@ -36,7 +36,10 @@ public class CameraExt
         //0,0为原点,偏移相机Center
         
         
-        var v1 = Matrix3x2.CreateTranslation(screenPosition  + transform.position - camera2D.rect.Center);
+        var v1 = Matrix3x2.CreateTranslation(screenPosition + transform.position);
+        
+        
+        //var v11 = Matrix3x2.Multiply(v1,v)
         
         var v2 = Matrix3x2.Multiply(v1, Matrix3x2.CreateRotation(-transform.rad));
 

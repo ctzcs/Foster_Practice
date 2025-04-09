@@ -66,10 +66,10 @@ public partial class RenderSystem:BaseSystem<World,float>
         var originOffset = camera.rect.Center;
         // 渲染系统应用矩阵时：
         batcher.PushMatrix(
-            -transform.position + camera.shake, // 将世界坐标原点对齐到视口中心
+            -transform.position+camera.shake, // 将世界坐标原点对齐到视口中心
             transform.scale / camera.scaleRate, // 缩放
-            originOffset,                       // 旋转中心保持与视口中心一致 
-            transform.rad
+            Vector2.Zero,                       // 旋转中心保持与视口中心一致 
+            -transform.rad
         );
         
     }
