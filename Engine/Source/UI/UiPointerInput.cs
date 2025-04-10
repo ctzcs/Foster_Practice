@@ -1,4 +1,4 @@
-﻿namespace Engine.Source.UI;
+﻿namespace Engine.UI;
 
 public class UiPointerInput
 {

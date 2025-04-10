@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using Foster.Framework;
 
-namespace Engine.Source.Asset;
+namespace Engine.Asset;
 
 public class Sprite
 {

@@ -1,8 +1,7 @@
 ﻿using System.Numerics;
 using Arch.AOT.SourceGenerator;
-using Engine.Source.Utility;
 using Foster.Framework;
-namespace Engine.Source.Camera;
+namespace Engine.Camera;
 [Component]
 public struct Camera2D
 {

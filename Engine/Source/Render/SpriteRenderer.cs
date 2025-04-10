@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using Arch.AOT.SourceGenerator;
 using Foster.Framework;
 
-namespace Engine.Source.Render;
+namespace Engine.Render;
 [Component]
 public struct SpriteRenderer
 {

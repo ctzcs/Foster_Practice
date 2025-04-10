@@ -2,11 +2,11 @@
 using Arch.Core;
 using Arch.System;
 using Arch.System.SourceGenerator;
-using Engine.Source.Camera;
-using Engine.Source.Render;
-using Engine.Source.Transform;
+
+using Engine.Render;
+using Engine.Transform;
 using Foster.Framework;
-using Transform = Engine.Source.Transform.Transform;
+using Transform = Engine.Transform.Transform;
 using Vector2 = System.Numerics.Vector2;
 
 namespace Content.Test;

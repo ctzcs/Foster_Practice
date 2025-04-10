@@ -1,7 +1,7 @@
 ﻿using Arch.AOT.SourceGenerator;
 using Foster.Framework;
 
-namespace Engine.Source.Other;
+namespace Engine.Other;
 [Component]
 public struct CheckBox
 {

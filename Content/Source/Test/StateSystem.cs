@@ -2,8 +2,8 @@
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
-using Engine.Source.Camera;
-using Engine.Source.Render;
+using Engine.Camera;
+using Engine.Render;
 using Foster.Framework;
 
 namespace Content.Test;
@@ -56,7 +56,7 @@ public partial class StateSystem:BaseSystem<World,float>
                 {
                     var pos = CameraExt.ScreenToWorld(ctx.Input.Mouse.Position);
                     //TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,texture, Color.Red);
-                    var frog = Engine.Source.Asset.Assets.GetSubtexture("frog/0");
+                    var frog = Engine.Asset.Assets.GetSubtexture("frog/0");
                     TestExt.CreateFrogCarrier(world, pos,0,Vector2.One,frog , Color.Red,5);
                     count++;
                 }
@@ -100,7 +100,7 @@ public partial class StateSystem:BaseSystem<World,float>
                 {
                     var pos = CameraExt.ScreenToWorld(ctx.Input.Mouse.Position);
                     //TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,texture, Color.Red);
-                    var building = Engine.Source.Asset.Assets.GetSubtexture("bd/0");
+                    var building = Engine.Asset.Assets.GetSubtexture("bd/0");
                     TestExt.CreateBuilding(world, Vector2.Zero, 0,Vector2.One * 5, building, Color.Red,1);
                     
                     TestExt.CreateBuilding(world, ctx.Window.Size/2, 0,Vector2.One * 5, building, Color.Blue,1);

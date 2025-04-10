@@ -1,10 +1,10 @@
-﻿using Arch.Bus;
+﻿
 using Arch.Core;
 using Arch.System;
-using Engine.Source;
-using Engine.Source.Camera;
-using Engine.Source.Render;
-using Engine.Source.Transform;
+using Engine;
+using Engine.Camera;
+using Engine.Render;
+using Engine.Transform;
 using Foster.Framework;
 
 
@@ -25,10 +25,10 @@ public class TestSample:ILifetime
         this.ctx = ctx;
         world = World.Create();
         
-        Engine.Source.Asset.Assets.Load(ctx.GraphicsDevice);
+        Engine.Asset.Assets.Load(ctx.GraphicsDevice);
         res = new Resources(
-            Engine.Source.Asset.Assets.Font,
-            Engine.Source.Asset.Assets.Atlas,
+            Engine.Asset.Assets.Font,
+            Engine.Asset.Assets.Atlas,
             new Batcher(this.ctx.GraphicsDevice));
         frameCounter = new FrameCounter();
         modules = new Group<float>("TestGroup",

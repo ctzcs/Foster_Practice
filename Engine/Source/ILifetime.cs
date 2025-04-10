@@ -1,4 +1,4 @@
-﻿namespace Engine.Source;
+﻿namespace Engine;
 
 public interface ILifetime
 {

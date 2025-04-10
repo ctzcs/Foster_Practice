@@ -4,7 +4,7 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using Foster.Framework;
 
-namespace Engine.Source.Transform;
+namespace Engine.Transform;
 
 public static class TransformExt
 {

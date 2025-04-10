@@ -1,6 +1,6 @@
 ﻿using Foster.Framework;
 
-namespace Engine.Source.UI;
+namespace Engine.UI;
 
 public class UiElement
 {

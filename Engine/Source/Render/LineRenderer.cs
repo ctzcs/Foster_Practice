@@ -3,7 +3,7 @@ using Arch.AOT.SourceGenerator;
 using Arch.Core;
 using Foster.Framework;
 
-namespace Engine.Source.Render;
+namespace Engine.Render;
 
 [Component]
 public struct LineRenderer

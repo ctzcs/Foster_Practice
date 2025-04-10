@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using Foster.Framework;
 
-namespace Engine.Source.Render;
+namespace Engine.Render;
 
 public interface IRenderer
 {

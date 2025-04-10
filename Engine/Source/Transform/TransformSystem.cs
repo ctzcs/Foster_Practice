@@ -2,9 +2,9 @@
 using Arch.Core;
 using Arch.System;
 using Arch.System.SourceGenerator;
-using Engine.Source.Other;
+using Engine.Other;
 
-namespace Engine.Source.Transform;
+namespace Engine.Transform;
 
 public partial class TransformSystem : BaseSystem<World, float>
 {

@@ -9,6 +9,7 @@ public class BuildingCatchSystem:BaseSystem<World,float>
     {
     }
 
+    //TODO 抓住所有到达建筑的实体，放下东西后，让其去资源建筑获取资源
 
     
 }

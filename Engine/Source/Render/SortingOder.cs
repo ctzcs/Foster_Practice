@@ -1,6 +1,6 @@
 ﻿using Arch.AOT.SourceGenerator;
 
-namespace Engine.Source.Render;
+namespace Engine.Render;
 
 [Component]
 public struct SortingOrder

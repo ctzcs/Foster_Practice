@@ -2,11 +2,11 @@
 using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.Core.Extensions;
-using Engine.Source.Other;
-using Engine.Source.Render;
-using Engine.Source.Transform;
+using Engine.Other;
+using Engine.Render;
+using Engine.Transform;
 using Foster.Framework;
-using Transform = Engine.Source.Transform.Transform;
+using Transform = Engine.Transform.Transform;
 
 namespace Content.Test;
 

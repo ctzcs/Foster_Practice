@@ -1,7 +1,7 @@
 ﻿using Arch.Core;
 using Arch.System;
 
-namespace Engine.Source.Test;
+namespace Engine.Test;
 
 public class TestSystem : BaseSystem<World, float>
 {

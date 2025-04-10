@@ -2,11 +2,11 @@
 using Arch.Core;
 using Arch.System;
 using Arch.System.SourceGenerator;
-using Engine.Source.Transform;
+using Engine.Transform;
 using Foster.Framework;
 using Vector2 = System.Numerics.Vector2;
 
-namespace Engine.Source.Camera;
+namespace Engine.Camera;
 
 public partial class CameraMoveSystem:BaseSystem<World,float>
 {

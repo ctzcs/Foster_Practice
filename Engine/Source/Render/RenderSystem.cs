@@ -4,11 +4,11 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
 using Arch.System.SourceGenerator;
-using Engine.Source.Camera;
-using Engine.Source.Other;
+using Engine.Camera;
+using Engine.Other;
 using Foster.Framework;
 
-namespace Engine.Source.Render;
+namespace Engine.Render;
 
 public partial class RenderSystem:BaseSystem<World,float>
 {

@@ -1,4 +1,4 @@
-﻿namespace Engine.Source.Scene;
+﻿namespace Engine.Scene;
 
 public class Scene : ILifetime
 {

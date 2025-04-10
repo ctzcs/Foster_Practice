@@ -4,7 +4,7 @@ using Arch.AOT.SourceGenerator;
 using Arch.Core;
 using Arch.Core.Extensions;
 
-namespace Engine.Source.Transform;
+namespace Engine.Transform;
 
 [Component]
 public struct Transform

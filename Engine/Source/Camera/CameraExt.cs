@@ -1,11 +1,10 @@
 ﻿using System.Numerics;
 using Arch.Core;
 using Arch.Core.Extensions;
-using Engine.Source.Render;
-using Foster.Framework;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Engine.Source.Camera;
+using Foster.Framework;
+
+namespace Engine.Camera;
 
 public class CameraExt
 {

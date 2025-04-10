@@ -1,6 +1,6 @@
 ﻿using Foster.Framework;
 
-namespace Engine.Source.Render;
+namespace Engine.Render;
 
 public struct Animator
 {

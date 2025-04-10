@@ -1,4 +1,4 @@
-﻿namespace Engine.Source.Utility;
+﻿namespace Engine.Utility;
 
 public class EnginePlatform
 {
