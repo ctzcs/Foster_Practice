@@ -15,7 +15,7 @@ public static class TestExt
     public static Entity CreateSimpleFrog(World world,Vector2 position,float rotation ,Vector2 size,Subtexture tex, Color color,int depth = 0)
     {
         var ent = world.Create(
-            new Unit(){isActive = true},
+            new Unit(),
             new Worker(),
             new Transform(Entity.Null, position, rotation, size),
             new CheckBox() { rect = new Rect(position, 16, 16) },
@@ -38,7 +38,7 @@ public static class TestExt
         Color color, int depth = 0)
     {
         var ent = world.Create(
-            new Unit(){isActive = true},
+            new Unit(),
             new Building(),
             new Transform(Entity.Null, position, rotation, size),
             new CheckBox() { rect = new Rect(position, 32, 32) },
@@ -60,7 +60,7 @@ public static class TestExt
     public static Entity CreatLine(World world,Vector2 position,float rotation ,Vector2 size,Color color,float linewidth,int depth = 0)
     {
         var ent = world.Create(
-            new Unit(){isActive = true},
+            new Unit(),
             new Transform(Entity.Null,position,rotation,size),
             new LineRenderer()
             {
