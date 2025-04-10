@@ -3,7 +3,7 @@
 namespace Content.Test;
 
 [Component]
-public struct Cha
+public struct Unit
 {
     
 }

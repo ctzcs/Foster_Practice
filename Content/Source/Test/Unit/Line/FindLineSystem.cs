@@ -45,7 +45,7 @@ public partial class FindLineSystem:BaseSystem<World,float>
     }
 
     [Query]
-    [All<Transform,CheckBox,SpriteRenderer,Cha>, None<HasParent>]
+    [All<Transform,CheckBox,Worker>, None<HasParent,BuildingCatch>]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void GetTransform(in Entity entity,ref Transform transform,in CheckBox box)
     {

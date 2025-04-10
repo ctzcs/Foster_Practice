@@ -22,7 +22,12 @@ public class CameraExt
         
         return ent;
     }
-    
+
+    public static void ResizeCamera(in Entity camera,Window window)
+    {
+        ref var c = ref camera.Get<Camera2D>();
+        c.rect = new Rect(0, 0, window.WidthInPixels, window.HeightInPixels);
+    }
     
     public static Vector2 ScreenToWorld(Vector2 screenPosition)
     {

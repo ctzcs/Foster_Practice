@@ -35,10 +35,13 @@ public class TestSample:ILifetime
             new StateSystem(world,ctx,res,frameCounter),
             new RandomPositionSystem(world,rng),
             new FindLineSystem(world,rng),
+            
+            new DestroyNotActiveEntitySystem(world),
+            
             new CameraMoveSystem(world,ctx),
             new TransformSystem(world),
             new RenderSystem(world,res.batcher,ctx.Window));
-        
+            
     }
     
 

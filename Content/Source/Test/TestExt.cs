@@ -15,7 +15,8 @@ public static class TestExt
     public static Entity CreateSimpleFrog(World world,Vector2 position,float rotation ,Vector2 size,Subtexture tex, Color color,int depth = 0)
     {
         var ent = world.Create(
-            new Cha(),
+            new Unit(){isActive = true},
+            new Worker(),
             new Transform(Entity.Null, position, rotation, size),
             new CheckBox() { rect = new Rect(position, 16, 16) },
         new SpriteRenderer()
@@ -32,12 +33,12 @@ public static class TestExt
         
         return ent;
     }
-
-
+    
     public static Entity CreateBuilding(World world, Vector2 position, float rotation, Vector2 size, Subtexture tex,
         Color color, int depth = 0)
     {
         var ent = world.Create(
+            new Unit(){isActive = true},
             new Building(),
             new Transform(Entity.Null, position, rotation, size),
             new CheckBox() { rect = new Rect(position, 32, 32) },
@@ -56,10 +57,11 @@ public static class TestExt
         return ent;
     }
     
-    
     public static Entity CreatLine(World world,Vector2 position,float rotation ,Vector2 size,Color color,float linewidth,int depth = 0)
     {
-        var ent = world.Create(new Transform(Entity.Null,position,rotation,size),
+        var ent = world.Create(
+            new Unit(){isActive = true},
+            new Transform(Entity.Null,position,rotation,size),
             new LineRenderer()
             {
                 line = new List<Vector2>(),
@@ -89,10 +91,12 @@ public static class TestExt
         }
        
     }
-    
-    
-    
-    
-    
+
+
+
+    public static void DestroyUnit(in Entity entity)
+    {
+        
+    }
     
 }

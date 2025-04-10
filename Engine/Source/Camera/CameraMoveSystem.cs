@@ -28,8 +28,15 @@ public partial class CameraMoveSystem:BaseSystem<World,float>
     {
         var ent = CameraExt.CreateCamera(ctx.Window,world,0,Vector2.One);
         Camera = ent;
+        ctx.Window.OnResize += OnResize;
+            
+        ;
     }
 
+    public override void Dispose()
+    {
+        ctx.Window.OnResize -= OnResize;
+    }
 
     public override void Update(in float t)
     {
@@ -81,5 +88,12 @@ public partial class CameraMoveSystem:BaseSystem<World,float>
         {
             transform.SetLocalRotation(transform.localRad + 1*Calc.DegToRad);
         }
+    }
+
+
+    void OnResize()
+    {
+        //TODO 除了直接Resize之外，还可以调控camera的缩放比例
+        CameraExt.ResizeCamera(Camera,ctx.Window);
     }
 }
