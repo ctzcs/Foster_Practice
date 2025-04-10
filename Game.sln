@@ -8,6 +8,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Content", "Content\Content.csproj", "{3B1CF04F-0C25-4434-B2F0-A5D1CE234718}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foster.Framework", "Lib\Foster\Framework\Foster.Framework.csproj", "{00221D16-FD68-488B-A925-A9724E8A573A}"
+EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +33,18 @@ Global
 		{3B1CF04F-0C25-4434-B2F0-A5D1CE234718}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B1CF04F-0C25-4434-B2F0-A5D1CE234718}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B1CF04F-0C25-4434-B2F0-A5D1CE234718}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22CDCC97-57C2-48EF-88C7-60388D9C918A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22CDCC97-57C2-48EF-88C7-60388D9C918A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22CDCC97-57C2-48EF-88C7-60388D9C918A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22CDCC97-57C2-48EF-88C7-60388D9C918A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{098C00C5-8BD4-43D9-A9B9-92F9814DDC57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{098C00C5-8BD4-43D9-A9B9-92F9814DDC57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{098C00C5-8BD4-43D9-A9B9-92F9814DDC57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{098C00C5-8BD4-43D9-A9B9-92F9814DDC57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00221D16-FD68-488B-A925-A9724E8A573A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00221D16-FD68-488B-A925-A9724E8A573A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00221D16-FD68-488B-A925-A9724E8A573A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00221D16-FD68-488B-A925-A9724E8A573A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

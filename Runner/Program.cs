@@ -9,7 +9,7 @@ internal static class Program
             "Game",
             "Game",
             1920,
-            1080));
+            1080,Flags:AppFlags.EnableGraphicsDebugging));
         gameContent.Run();
     }
 }
