@@ -1,9 +1,11 @@
 ﻿
 using Arch.Core;
+using Arch.LowLevel;
 using Arch.System;
 using Engine;
 using Engine.Camera;
 using Engine.Render;
+using Engine.Scene;
 using Engine.Transform;
 using Foster.Framework;
 
@@ -24,7 +26,6 @@ public class TestSample:ILifetime
     {
         this.ctx = ctx;
         world = World.Create();
-        
         Engine.Asset.Assets.Load(ctx.GraphicsDevice);
         res = new Resources(
             Engine.Asset.Assets.Font,
@@ -33,6 +34,9 @@ public class TestSample:ILifetime
         frameCounter = new FrameCounter();
         modules = new Group<float>("TestGroup",
             new StateSystem(world,ctx,res,frameCounter),
+            
+            new BuildingCatchSystem(world),
+            
             new RandomPositionSystem(world,rng),
             new FindLineSystem(world,rng),
             

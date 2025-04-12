@@ -138,6 +138,7 @@ public static class TransformExt
                 if (parent.Has<Transform>())
                 {
                     var parentTransform = preParent.Get<Transform>();
+                    parentTransform.children.Remove(child);
                     if (parentTransform.children.Count <= 0)
                     {
                         parent.Remove<HasChild>();

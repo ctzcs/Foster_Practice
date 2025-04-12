@@ -77,7 +77,7 @@ public static class TestExt
         return ent;
     }
 
-    public static void CreateFrogCarrier(World world,Vector2 pos,float rotation,Vector2 size,Subtexture texture,Color color,int wholeCount)
+    public static Entity CreateFrogCarrier(World world,Vector2 pos,float rotation,Vector2 size,Subtexture texture,Color color,int wholeCount)
     {
         var root = CreateSimpleFrog
             (world, pos,rotation ,size, texture, color);
@@ -89,7 +89,8 @@ public static class TestExt
             e.SetParent(last);
             last = e;
         }
-       
+
+        return root;
     }
 
 

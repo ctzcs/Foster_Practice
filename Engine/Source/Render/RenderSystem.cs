@@ -76,6 +76,7 @@ public partial class RenderSystem:BaseSystem<World,float>
             -transform.position, 
             transform.scale / camera.scaleRate,
             -transform.rad);
+        
         // batcher.PushMatrix(
         //     camera.rect.Center,
         //     transform.scale / camera.scaleRate,
