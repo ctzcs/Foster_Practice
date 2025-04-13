@@ -27,9 +27,9 @@ public partial class BuildingCatchSystem:BaseSystem<World,float>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void Catch(in Entity entity,ref Transform transform)
     {
-        if (Vector2.DistanceSquared(transform.position,Vector2.Zero) < 9)
+        if (Vector2.DistanceSquared(transform.position,Vector2.Zero) < 100)
         {
-            if (transform.children.Count < 0)
+            if (transform.children.Count <= 0)
             {
                 var child = TestExt.CreateFrogCarrier(
                     world,
@@ -44,7 +44,7 @@ public partial class BuildingCatchSystem:BaseSystem<World,float>
         }
         
         
-        if (Vector2.DistanceSquared(transform.position,new Vector2(990,540)) < 9)
+        if (Vector2.DistanceSquared(transform.position,new Vector2(960,540)) < 250)
         {
             checkEntities.Clear();
             checkEntities.Add(entity);
@@ -52,14 +52,16 @@ public partial class BuildingCatchSystem:BaseSystem<World,float>
             {
                 var root = checkEntities[0];
                 var children = root.Get<Transform>().children;
-                if ( children.Count > 0)
+                for (int i = 0; i < children.Count; i++)
                 {
-                    for (int i = 0; i < children.Count; i++)
-                    {
-                        children[i].SetParent(Entity.Null);
-                        children[i].Add<NoActive>();
-                        checkEntities.Add(children[i]);
-                    }
+                    var child = children[i];
+                    checkEntities.Add(child);
+                    
+                    child.SetParent(Entity.Null);
+
+                    if (!child.Has<NoActive>())
+                        child.Add(new NoActive());
+                    
                 }
                 checkEntities.RemoveAt(0);
             }
@@ -70,4 +72,6 @@ public partial class BuildingCatchSystem:BaseSystem<World,float>
     
     List<Entity> checkEntities = new List<Entity>();
     
+    
+    //不知道为什么残留了很多实体在路上
 }

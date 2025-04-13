@@ -1,4 +1,5 @@
-﻿using Arch.Core;
+﻿using System.Runtime.CompilerServices;
+using Arch.Core;
 using Arch.System;
 using Arch.System.SourceGenerator;
 
@@ -13,9 +14,14 @@ public partial class DestroyNotActiveEntitySystem:BaseSystem<World,float>
         this.world = world;
     }
 
+    public override void Update(in float deltaTime)
+    {
+        DestroyQuery(world);
+    }
 
     [Query]
-    [All<NoActive>]
+    [All<NoActive,Unit>]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void Destroy(in Entity entity)
     {
         world.Destroy(entity);

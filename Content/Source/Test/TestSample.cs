@@ -34,17 +34,22 @@ public class TestSample:ILifetime
         frameCounter = new FrameCounter();
         modules = new Group<float>("TestGroup",
             new StateSystem(world,ctx,res,frameCounter),
-            
             new BuildingCatchSystem(world),
+            
+            
             
             new RandomPositionSystem(world,rng),
             new FindLineSystem(world,rng),
             
-            new DestroyNotActiveEntitySystem(world),
+            
             
             new CameraMoveSystem(world,ctx),
             new TransformSystem(world),
-            new RenderSystem(world,res.batcher,ctx.Window));
+            
+            
+            new RenderSystem(world,res.batcher,ctx.Window),
+            new DestroyNotActiveEntitySystem(world));
+            
             
     }
     

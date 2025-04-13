@@ -133,15 +133,15 @@ public static class TransformExt
         {
             ref var childTransform = ref child.Get<Transform>();
             var preParent = childTransform.parent;
-            if (preParent != Entity.Null)
+            if ( preParent != Entity.Null)
             {
-                if (parent.Has<Transform>())
+                if (preParent.Has<Transform>())
                 {
-                    var parentTransform = preParent.Get<Transform>();
+                    ref var parentTransform = ref preParent.Get<Transform>();
                     parentTransform.children.Remove(child);
                     if (parentTransform.children.Count <= 0)
                     {
-                        parent.Remove<HasChild>();
+                        preParent.Remove<HasChild>();
                     }
                 }
                 

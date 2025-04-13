@@ -57,7 +57,7 @@ public partial class StateSystem:BaseSystem<World,float>
                     var pos = CameraExt.ScreenToWorld(ctx.Input.Mouse.Position);
                     //TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,texture, Color.Red);
                     var frog = Engine.Asset.Assets.GetSubtexture("frog/0");
-                    TestExt.CreateFrogCarrier(world, pos,0,Vector2.One,frog , Color.Red,5);
+                    TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,frog , Color.Red,5);
                     count++;
                 }
                 
