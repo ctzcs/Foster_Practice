@@ -5,9 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-
-   
-
+    
     <ItemGroup>
         <PackageReference Include="Arch" Version="2.0.0"/>
         <PackageReference Include="Arch.AOT.SourceGenerator" Version="1.0.1" />

@@ -43,7 +43,7 @@ public partial class FindLineSystem:BaseSystem<World,float>
     }
 
     [Query]
-    [All<Transform,CheckBox,Worker>, None<HasParent,BuildingCatch>]
+    [All<Transform,CheckBox,Worker>, None<HasParent,NoActive>]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void GetTransform(in Entity entity,ref Transform transform,in CheckBox box)
     {
@@ -51,7 +51,7 @@ public partial class FindLineSystem:BaseSystem<World,float>
         {
             return;
         }
-        if (entity.Has<FollowLine>())
+        if (entity.IsAlive() && entity.Has<FollowLine>())
         {
             ref var followLine = ref entity.Get<FollowLine>();
             if (followLine.line.IsAlive())

@@ -5,5 +5,5 @@ namespace Content.Test;
 [Component]
 public struct Unit
 {
-    
+    public bool isActive;
 }

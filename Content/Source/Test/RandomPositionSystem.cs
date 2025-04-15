@@ -40,9 +40,9 @@ public partial class RandomPositionSystem:BaseSystem<World,float>
     public void SetRandomPosition(ref Transform transform)
     {
         //var newPos = transform.localPosition + new Vector2(rng.Float(-1f,1f),rng.Float(-1f,1f));
-        var newRotation = Math.Clamp(transform.rad + rng.Float(-1f,1f) * Calc.DegToRad * deltaTime,minRad,maxRad); ;
+        //var newRotation = Math.Clamp(transform.rad + rng.Float(-1f,1f) * Calc.DegToRad * deltaTime,minRad,maxRad); ;
         
         //transform.SetLocalPosition(newPos);
-        transform.SetLocalRotation(newRotation);
+        //transform.SetLocalRotation(newRotation);
     }
 }

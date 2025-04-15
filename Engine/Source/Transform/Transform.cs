@@ -112,11 +112,15 @@ public struct Transform
             
             for (int i = 0; i < children.Count; i++)
             {
-                children[i].Get<Transform>().SetDirty(dirtyFlagType);
+                if (children[i].IsAlive())
+                {
+                    children[i].Get<Transform>().SetDirty(dirtyFlagType);
+                }
             }
         }
     }
     
-    
+    public int ChildrenCount => children.Count;
+    public bool HasParent => parent != Entity.Null;
 }
 

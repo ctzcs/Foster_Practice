@@ -16,21 +16,21 @@ public partial class CameraMoveSystem:BaseSystem<World,float>
     private float scaleSpeed;
     private float deltaTime;
     public static Entity Camera;
-    public CameraMoveSystem(World world,App ctx) : base(world)
+    private Target target;
+    public CameraMoveSystem(World world,App ctx,Target target) : base(world)
     {
         this.world = world;
         this.ctx = ctx;
         speed = 1000;
         scaleSpeed = 10;
+        this.target = target;
     }
 
     public override void Initialize()
     {
-        var ent = CameraExt.CreateCamera(ctx.Window,world,0,Vector2.One);
+        var ent = CameraExt.CreateCamera(target,world,0,Vector2.One);
         Camera = ent;
         ctx.Window.OnResize += OnResize;
-            
-        ;
     }
 
     public override void Dispose()

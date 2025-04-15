@@ -54,10 +54,10 @@ public partial class StateSystem:BaseSystem<World,float>
                 
                 if (ctx.Input.Mouse.LeftDown)
                 {
-                    var pos = CameraExt.ScreenToWorld(ctx.Input.Mouse.Position);
+                    var pos = CameraExt.ScreenToWorld(ctx.Input.Mouse.Position,ctx.Window,res.logicSize);
                     //TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,texture, Color.Red);
                     var frog = Engine.Asset.Assets.GetSubtexture("frog/0");
-                    TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,frog , Color.Red,5);
+                    TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,frog , Color.Black,0);
                     count++;
                 }
                 
@@ -75,7 +75,7 @@ public partial class StateSystem:BaseSystem<World,float>
                         line = TestExt.CreatLine(world,Vector2.Zero,0,Vector2.One,Color.Gray,5);
                     }
                     ref var render = ref line.Get<LineRenderer>();
-                    render.AddPoint(CameraExt.ScreenToWorld(ctx.Input.Mouse.Position));
+                    render.AddPoint(CameraExt.ScreenToWorld(ctx.Input.Mouse.Position,ctx.Window,res.logicSize));
                 }
                 else if (ctx.Input.Mouse.RightPressed)
                 {
@@ -98,7 +98,7 @@ public partial class StateSystem:BaseSystem<World,float>
                 
                 if (ctx.Input.Mouse.LeftDown)
                 {
-                    var pos = CameraExt.ScreenToWorld(ctx.Input.Mouse.Position);
+                    var pos = CameraExt.ScreenToWorld(ctx.Input.Mouse.Position,ctx.Window,res.logicSize);
                     //TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,texture, Color.Red);
                     var building = Engine.Asset.Assets.GetSubtexture("bd/0");
                     TestExt.CreateBuilding(world, Vector2.Zero, 0,Vector2.One * 5, building, Color.Red,1);
@@ -108,10 +108,6 @@ public partial class StateSystem:BaseSystem<World,float>
                 }
                 break;
         }
-        
-
-        
-        
         
     }
 
@@ -137,7 +133,7 @@ public partial class StateSystem:BaseSystem<World,float>
         res.batcher.CircleLine(Vector2.Zero,20,3,10,Color.Black);
         res.batcher.CircleLine(ctx.Window.SizeInPixels/2f,20,3,10,Color.Red);
         res.batcher.CircleLine(ctx.Window.SizeInPixels,20,3,10,Color.Black);
-        res.batcher.Render(ctx.Window);
+        res.batcher.Render(res.target);
         res.batcher.Clear();
     }
 }

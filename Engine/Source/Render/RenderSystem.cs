@@ -15,7 +15,7 @@ public partial class RenderSystem:BaseSystem<World,float>
     private const int BatchRenderCount = 32768;
     private World world;
     private Batcher batcher;
-    private Window window;
+    private Target renderTarget;
     private int renderCount = 0;
     private readonly List<OrderRecord> entities = new(150000);
     private Matrix3x2 transformMatrix;
@@ -26,11 +26,11 @@ public partial class RenderSystem:BaseSystem<World,float>
        public int order;
     }
     
-    public RenderSystem(World world,Batcher batcher,Window window) : base(world)
+    public RenderSystem(World world,Batcher batcher,Target renderTarget) : base(world)
     {
         this.world = world;
         this.batcher = batcher;
-        this.window = window;
+        this.renderTarget = renderTarget;
     }
 
     public override void AfterUpdate(in float t)
@@ -38,7 +38,7 @@ public partial class RenderSystem:BaseSystem<World,float>
         entities.Clear();
 
         BeforeEntityRenderQuery(world);
-        batcher.PushMatrix(transformMatrix);
+        
         //先画线
         LineRenderQuery(world);
         //再画Sprite
@@ -54,35 +54,20 @@ public partial class RenderSystem:BaseSystem<World,float>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void BeforeEntityRender(in Transform.Transform transform,in Camera2D camera)
     {
-        //TODO 推入相机矩阵 相机中心坐标 + 抖动
+        //推入相机矩阵 相机中心坐标 + 抖动
         // 让所有的非UI元素都会向相机相反方向移动，
         // 放缩的时候都相对原点了
         // 如果是正常的归一化，应该相对相机原点的地方，是坐标原点，所以缺一个NDC和投影坐标系
-        //batcher.PushMatrix(-transform.localPosition + camera.shake);
         
         // 渲染系统应用矩阵时：
-        
-
-        /*var v1 = Foster.Framework.Transform.CreateMatrix(camera.rect.Center,
-            -transform.position, 
-            transform.scale / camera.scaleRate,
-            -transform.rad);
-        
-        batcher.PushMatrix( 
-            v1
-        );*/
         
         transformMatrix = Foster.Framework.Transform.CreateMatrix(camera.rect.Center,
             -transform.position, 
             transform.scale / camera.scaleRate,
             -transform.rad);
         
-        // batcher.PushMatrix(
-        //     camera.rect.Center,
-        //     transform.scale / camera.scaleRate,
-        //     -transform.position,
-        //     -transform.rad
-        // );
+        batcher.PushMatrix(transformMatrix);
+        
     }
     
     
@@ -141,7 +126,7 @@ public partial class RenderSystem:BaseSystem<World,float>
             if (renderCount > BatchRenderCount )
             {
                 renderCount = 0;
-                batcher.Render(window);
+                batcher.Render(renderTarget);
                 batcher.PopMatrix();
                 batcher.Clear();
                 batcher.PushMatrix(transformMatrix);

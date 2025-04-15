@@ -11,8 +11,7 @@ public struct Camera2D
     public Rect rect;
     public float scaleRate;
     public Vector2 shake;
-
-
+    
     public void SetScaleRate(float scaleRateChange)
     {
         scaleRate += scaleRateChange;

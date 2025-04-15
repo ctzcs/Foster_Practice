@@ -1,8 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using System.Numerics;
-using System.Resources;
+﻿
 using System.Runtime.CompilerServices;
+using Arch.Buffer;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
@@ -10,16 +8,29 @@ using Arch.System.SourceGenerator;
 using Engine.Asset;
 using Engine.Camera;
 using Engine.Transform;
+using Foster.Framework;
 using Color = Foster.Framework.Color;
+using Transform = Engine.Transform.Transform;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Content.Test;
 
 public partial class BuildingCatchSystem:BaseSystem<World,float>
 {
     private World world;
+    private CommandBuffer commandBuffer;
     public BuildingCatchSystem(World world) : base(world)
     {
         this.world = world;
+        this.commandBuffer = new CommandBuffer();
+    }
+
+
+    public override void Update(in float t)
+    {
+        CatchQuery(world);
+        commandBuffer.Playback(world,true);
+        
     }
 
     [Query]
@@ -27,7 +38,7 @@ public partial class BuildingCatchSystem:BaseSystem<World,float>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void Catch(in Entity entity,ref Transform transform)
     {
-        if (Vector2.DistanceSquared(transform.position,Vector2.Zero) < 100)
+        if (Vector2.DistanceSquared(transform.position,Vector2.Zero) < 250)
         {
             if (transform.children.Count <= 0)
             {
@@ -44,34 +55,52 @@ public partial class BuildingCatchSystem:BaseSystem<World,float>
         }
         
         
-        if (Vector2.DistanceSquared(transform.position,new Vector2(960,540)) < 250)
+        if (Vector2.DistanceSquared(transform.position,new Vector2(640,360)) < 250)
         {
             checkEntities.Clear();
-            checkEntities.Add(entity);
-            while (checkEntities.Count > 0)
+            
+            GetAllChild(checkEntities,entity);
+            
+            for (int i = 0; i < checkEntities.Count; i++)
             {
-                var root = checkEntities[0];
-                var children = root.Get<Transform>().children;
-                for (int i = 0; i < children.Count; i++)
+                if (checkEntities[i].IsAlive())
                 {
-                    var child = children[i];
-                    checkEntities.Add(child);
-                    
-                    child.SetParent(Entity.Null);
-
-                    if (!child.Has<NoActive>())
-                        child.Add(new NoActive());
-                    
+                    // 调试输出
+                    Log.Info($"Child Entity: {checkEntities[i]}");
+                    ref var childTransform = ref checkEntities[i].Get<Transform>();
+                    if (childTransform.parent != Entity.Null)
+                    {
+                        checkEntities[i].SetParent(Entity.Null);
+                    }
+                    //checkEntities[i].Add(new NoActive());
+                    commandBuffer.Destroy(checkEntities[i]);
                 }
-                checkEntities.RemoveAt(0);
+                    
             }
+            
+            
+            
         }
         
         
     }
     
-    List<Entity> checkEntities = new List<Entity>();
+    List<Entity> checkEntities = [];
+
+    void GetAllChild(List<Entity> child,in Entity root)
+    {
+        if (!root.IsAlive() || !root.Has<Transform>())
+        {
+            return;
+        }
+        
+        var children = root.Get<Transform>().children;
+        if (children?.Count <= 0) return;
+        for (int i = 0; i < children?.Count; i++)
+        {
+            child.Add(children[i]);
+            //GetAllChild(child,children[i]);
+        }
+    }
     
-    
-    //不知道为什么残留了很多实体在路上
 }
