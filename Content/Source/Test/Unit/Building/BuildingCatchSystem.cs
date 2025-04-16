@@ -1,12 +1,11 @@
-﻿
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Arch.Buffer;
 using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
 using Arch.System.SourceGenerator;
 using Engine.Asset;
-using Engine.Camera;
+using Engine.Performance;
 using Engine.Transform;
 using Foster.Framework;
 using Color = Foster.Framework.Color;
@@ -18,29 +17,35 @@ namespace Content.Test;
 public partial class BuildingCatchSystem:BaseSystem<World,float>
 {
     private World world;
-    private CommandBuffer commandBuffer;
-    public BuildingCatchSystem(World world) : base(world)
+    private Resources resources;
+    public BuildingCatchSystem(World world,Resources res) : base(world)
     {
         this.world = world;
-        this.commandBuffer = new CommandBuffer();
+        this.resources = res;
     }
 
 
     public override void Update(in float t)
     {
+#if DEBUG
+        using var zone = Profiler.BeginZone(nameof(BuildingCatchSystem));
+#endif
         CatchQuery(world);
-        commandBuffer.Playback(world,true);
         
     }
 
     [Query]
-    [All<Worker,Transform>,None<HasParent>]
+    [All<Worker,Transform>/*None<HasParent>*/]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void Catch(in Entity entity,ref Transform transform)
     {
-        if (Vector2.DistanceSquared(transform.position,Vector2.Zero) < 250)
+        if (transform.HasParent)
         {
-            if (transform.children.Count <= 0)
+            return;
+        }
+        if (Vector2.DistanceSquared(transform.position,Vector2.Zero) < 64)
+        {
+            if (transform.ChildrenCount <= 0)
             {
                 var child = TestExt.CreateFrogCarrier(
                     world,
@@ -49,31 +54,25 @@ public partial class BuildingCatchSystem:BaseSystem<World,float>
                     Vector2.One,
                     Assets.GetSubtexture("frog/0"),
                     Color.Blue,
-                    4);
+                    4); 
                 child.SetParent(entity);
+                
             }
         }
         
         
-        if (Vector2.DistanceSquared(transform.position,new Vector2(640,360)) < 250)
+        else if (Vector2.DistanceSquared(transform.position,new Vector2(0,resources.logicSize.Y/2)) < 64)
         {
             checkEntities.Clear();
-            
             GetAllChild(checkEntities,entity);
-            
             for (int i = 0; i < checkEntities.Count; i++)
             {
                 if (checkEntities[i].IsAlive())
                 {
                     // 调试输出
-                    Log.Info($"Child Entity: {checkEntities[i]}");
                     ref var childTransform = ref checkEntities[i].Get<Transform>();
-                    if (childTransform.parent != Entity.Null)
-                    {
-                        checkEntities[i].SetParent(Entity.Null);
-                    }
-                    //checkEntities[i].Add(new NoActive());
-                    commandBuffer.Destroy(checkEntities[i]);
+                    if (childTransform.Parent != Entity.Null) checkEntities[i].SetParent(Entity.Null);
+                    if(!checkEntities[i].Has<NoActive>()) checkEntities[i].Add(new NoActive());
                 }
                     
             }
@@ -94,12 +93,12 @@ public partial class BuildingCatchSystem:BaseSystem<World,float>
             return;
         }
         
-        var children = root.Get<Transform>().children;
+        var children = root.Get<Transform>().Children;
         if (children?.Count <= 0) return;
         for (int i = 0; i < children?.Count; i++)
         {
             child.Add(children[i]);
-            //GetAllChild(child,children[i]);
+            GetAllChild(child,children[i]);
         }
     }
     

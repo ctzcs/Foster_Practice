@@ -4,7 +4,9 @@ using Arch.Core;
 using Arch.System;
 using Engine;
 using Engine.Camera;
+using Engine.Performance;
 using Engine.Render;
+using Engine.Test;
 using Engine.Transform;
 using Foster.Framework;
 
@@ -42,23 +44,24 @@ public class TestSample:IContent
             new Vector2(width,height));
         modules = new Group<float>("TestGroup",
             new StateSystem(world,ctx,res,frameCounter),
-            new BuildingCatchSystem(world),
+            new BuildingCatchSystem(world,res),
             new DestroyNotActiveEntitySystem(world),
-            new RandomPositionSystem(world,rng),
+            //new RandomPositionSystem(world,rng),
             new FindLineSystem(world,rng),
             
-            new CameraMoveSystem(world,ctx,target),
+            new CameraSystem(world,ctx,target),
             new TransformSystem(world),
             
-            new RenderSystem(world,res.batcher,target));
-            
-            
+            new RenderSystem(world,res.batcher,target)
+            /*new PrintEntitiesSystem(world)*/);
     }
     
 
     public void Start()
     {
+        Profiler.AppInfo("Hello AppInfo!");
         modules.Initialize();
+        
     }
 
     public void Destroy()
@@ -68,16 +71,31 @@ public class TestSample:IContent
 
     public void Update()
     {
+#if DEBUG
+        using var zone = Profiler.BeginZone("Update");
+#endif
         deltaTime = ctx.Time.Delta;
         modules.Update(in deltaTime);
+        
     }
 
     public void Render()
     {
-        target.Clear(Color.White);
-        modules.AfterUpdate(in deltaTime);
-        res.batcher.Render(target);
-        res.batcher.Clear();
+#if DEBUG
+        using (Profiler.BeginZone("Render"))
+        {
+#endif
+            
+            target.Clear(Color.White);
+            modules.AfterUpdate(in deltaTime);
+            res.batcher.Render(target);
+            res.batcher.Clear();
+#if DEBUG
+        }
+        Profiler.EmitFrameMark();
+#endif
+        
+        
     }
 
     

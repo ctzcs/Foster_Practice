@@ -17,9 +17,9 @@ public static class TransformExt
     {
         if (transform.hierarchyDirty == Transform.EDirtyType.Clean) return;
         
-        if (transform.parent != Entity.Null)
+        if (transform.Parent != Entity.Null)
         {
-            UpdateTransform(ref transform.parent.Get<Transform>());
+            UpdateTransform(ref transform.Parent.Get<Transform>());
         }
         
         if ((transform.hierarchyDirty & Transform.EDirtyType.PositionDirty) != 0)
@@ -37,7 +37,7 @@ public static class TransformExt
     
         if ((transform.hierarchyDirty & Transform.EDirtyType.ScaleDirty) != 0)
         {
-            transform.scaleMatrix = Matrix3x2.CreateScale(transform.localScale);
+            transform.scaleMatrix = Matrix3x2.CreateScale(transform.localScale); 
             //transform.scale = parentTransform.scale * transform.localScale;
         }
         
@@ -46,7 +46,7 @@ public static class TransformExt
         transform.localTransform = Matrix3x2.Multiply(transform.scaleMatrix,transform.rotationMatrix);
         transform.localTransform = Matrix3x2.Multiply(transform.localTransform,transform.translationMatrix);
 
-        if (transform.parent == Entity.Null)
+        if (transform.Parent == Entity.Null)
         {
             transform.worldTransform = transform.localTransform;
             transform.position = transform.localPosition;
@@ -55,7 +55,7 @@ public static class TransformExt
         }
         else
         {
-            ref var parentTransform = ref transform.parent.Get<Transform>();
+            ref var parentTransform = ref transform.Parent.Get<Transform>();
             
             transform.worldTransform = Matrix3x2.Multiply(transform.localTransform,parentTransform.worldTransform);
 
@@ -129,30 +129,42 @@ public static class TransformExt
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void SetParent(this Entity child, Entity parent)
     {
+        /*CommandBuffer cmb = EcsUtils.Cmb;
+        cmb.Dispose();*/
+        //打印出parent,preparent,child
+        //解除可能会导致localPosition和WorldPosition的问题，
+        
         if (parent == Entity.Null)
         {
             ref var childTransform = ref child.Get<Transform>();
-            var preParent = childTransform.parent;
+            var preParent = childTransform.Parent;
             if ( preParent != Entity.Null)
             {
                 if (preParent.Has<Transform>())
                 {
                     ref var preParentTransform = ref preParent.Get<Transform>();
-                    preParentTransform.children.Remove(child);
-                    if (preParentTransform.children.Count <= 0)
+                    preParentTransform.RemoveChild(child);
+                    /*if (preParentTransform.children.Count <= 0)
                     {
-                        preParent.Remove<HasChild>();
-                    }
+                        //preParent.Remove<HasChild>();
+                        cmb.Remove<HasChild>(preParent);
+                    }*/
                 }
                 
             }
-            child.Remove<HasParent>();
-            childTransform.parent = Entity.Null;
+            //cmb.Remove<HasParent>(child); //child.Remove<HasParent>();
+            childTransform.Parent = Entity.Null;
+            
+            childTransform.SetLocalPosition(childTransform.position);
+            
+            //cmb.Playback(World.Worlds.DangerousGetReferenceAt(child.WorldId),true);
             return;
         }
-        if(parent.Has<Transform>()) parent.Get<Transform>().children.Add(child);
-        if(child.Has<Transform>()) child.Get<Transform>().parent = parent;
-        if(!child.Has<HasParent>()) child.Add<HasParent>();
-        if(!parent.Has<HasChild>()) parent.Add<HasChild>();
+        if(parent.Has<Transform>()) parent.Get<Transform>().AddChild(child);
+        if(child.Has<Transform>()) child.Get<Transform>().Parent = parent;
+        //if(!child.Has<HasParent>()) cmb.Add<HasParent>(child); //child.Add<HasParent>();
+        //if(!parent.Has<HasChild>()) cmb.Add<HasChild>(parent); //parent.Add<HasChild>();
+        //cmb.Playback(World.Worlds.DangerousGetReferenceAt(child.WorldId),true);
+        
     }
 }

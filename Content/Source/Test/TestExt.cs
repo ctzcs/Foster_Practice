@@ -85,9 +85,10 @@ public static class TestExt
         for (int i = 0; i < wholeCount - 1; i++)
         {
             var e = CreateSimpleFrog
-                (world, new Vector2(0, -10), 0,Vector2.One,texture,new Color(0,1,0,0.5f), i);
+                (world, new Vector2(0, -10), 0,Vector2.One,texture,Color.Green, i);
             e.SetParent(last);
             last = e;
+            
         }
 
         return root;

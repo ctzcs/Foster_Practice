@@ -56,7 +56,7 @@ public class CameraExt
         //TODO 坐标计算还是不对
         //屏幕转相机
         //相机转世界
-        var camera = CameraMoveSystem.Camera;
+        var camera = CameraSystem.Camera;
         ref var transform = ref camera.Get<Transform.Transform>();
         ref var camera2D = ref camera.Get<Camera2D>();
         //0,0为原点,偏移相机Center

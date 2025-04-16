@@ -10,9 +10,9 @@ namespace Engine.Transform;
 public struct Transform
 {
     #region Relationship
-    public Entity parent;
+    private Entity parent;
     
-    public List<Entity> children;
+    private List<Entity> children;
     
     #endregion
     
@@ -46,8 +46,6 @@ public struct Transform
     public Matrix3x2 scaleMatrix;
     #endregion
     
-    
-
     #region DirtyTag
 
     [Flags]
@@ -88,6 +86,23 @@ public struct Transform
         SetDirty(EDirtyType.PositionDirty | EDirtyType.RotationDirty | EDirtyType.ScaleDirty);
     }
     
+    
+
+    public Entity Parent
+    {
+        get => parent;
+        set => parent = value;
+    }
+
+    public int ChildrenCount => children.Count;
+
+    public readonly List<Entity> Children => children;
+    
+    public bool HasParent => parent != Entity.Null;
+    
+    public bool HasChildren => children.Count > 0;
+    
+    
     /// <summary>
     /// sets the dirty flag on the enum and passes it down to our children
     /// </summary>
@@ -119,8 +134,17 @@ public struct Transform
             }
         }
     }
-    
-    public int ChildrenCount => children.Count;
-    public bool HasParent => parent != Entity.Null;
+
+
+    public void AddChild(Entity child)
+    {
+        children.Add(child);
+    }
+
+    public void RemoveChild(Entity child)
+    {
+        children.Remove(child);
+    }
+
 }
 

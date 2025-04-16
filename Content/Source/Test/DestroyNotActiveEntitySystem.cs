@@ -3,6 +3,7 @@ using Arch.Core;
 using Arch.Core.Extensions;
 using Arch.System;
 using Arch.System.SourceGenerator;
+using Engine.Performance;
 
 namespace Content.Test;
 
@@ -17,7 +18,9 @@ public partial class DestroyNotActiveEntitySystem:BaseSystem<World,float>
 
     public override void Update(in float deltaTime)
     {
-        Console.WriteLine("DestroyNotActiveEntitySystem updating...");
+#if DEBUG
+        using var zone = Profiler.BeginZone(nameof(DestroyNotActiveEntitySystem));
+#endif
         DestroyQuery(world);
     }
 
@@ -26,16 +29,9 @@ public partial class DestroyNotActiveEntitySystem:BaseSystem<World,float>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void Destroy(in Entity entity)
     {
-        Console.WriteLine($"Trying to destroy entity: {entity}");
         if (entity.IsAlive())
         {
-            Console.WriteLine($"Entity {entity} is alive, destroying...");
             world.Destroy(entity);
         }
-        else
-        {
-            Console.WriteLine($"Entity {entity} is not alive");
-        }
-        
     }
 }

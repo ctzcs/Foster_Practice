@@ -6,6 +6,7 @@ using Arch.System;
 using Arch.System.SourceGenerator;
 using Engine.Camera;
 using Engine.Other;
+using Engine.Performance;
 using Foster.Framework;
 
 namespace Engine.Render;
@@ -33,8 +34,17 @@ public partial class RenderSystem:BaseSystem<World,float>
         this.renderTarget = renderTarget;
     }
 
+    
+    public override void Update(in float t){}
+    
     public override void AfterUpdate(in float t)
     {
+
+/*#if DEBUG
+        using var zone = Profiler.BeginZone(nameof(RenderSystem));
+#endif*/
+
+        
         entities.Clear();
 
         BeforeEntityRenderQuery(world);
@@ -42,10 +52,20 @@ public partial class RenderSystem:BaseSystem<World,float>
         //先画线
         LineRenderQuery(world);
         //再画Sprite
-        BuildSpriteRenderListQuery(world);
-        HandleSpriteRenderList();
+        using (Profiler.BeginZone("Sort"))
+        {
+            BuildSpriteRenderListQuery(world);
+        }
+        using (Profiler.BeginZone("DrawSprite"))
+        {
+            HandleSpriteRenderList();
+        }
+        
 #if DEBUG
-        RenderDebugRectQuery(world);
+        using (Profiler.BeginZone("CheckBox"))
+        {
+            RenderDebugRectQuery(world);
+        }
 #endif
     }
 
@@ -96,6 +116,10 @@ public partial class RenderSystem:BaseSystem<World,float>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void BuildSpriteRenderList(in Entity entity,in SortingOrder sortingOrder)
     {
+        if (!entity.IsAlive())
+        {
+            return;
+        }
         entities.Add(new OrderRecord()
         {
             entity = entity,

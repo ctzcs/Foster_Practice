@@ -4,6 +4,7 @@ using Arch.Core.Extensions;
 using Arch.System;
 using Arch.System.SourceGenerator;
 using Engine.Other;
+using Engine.Performance;
 using Engine.Render;
 using Engine.Transform;
 using Foster.Framework;
@@ -26,6 +27,10 @@ public partial class FindLineSystem:BaseSystem<World,float>
 
     public override void Update(in float t)
     {
+#if DEBUG
+        using var zone = Profiler.BeginZone(nameof(FindLineSystem));
+#endif
+        
         deltaTime = t;
         _lineEntities.Clear();
         AllLineEntitiesQuery(world);
@@ -43,17 +48,18 @@ public partial class FindLineSystem:BaseSystem<World,float>
     }
 
     [Query]
-    [All<Transform,CheckBox,Worker>, None<HasParent,NoActive>]
+    [All<Transform,CheckBox,Worker>]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void GetTransform(in Entity entity,ref Transform transform,in CheckBox box)
     {
-        if (_lineEntities.Count == 0)
+        if (_lineEntities.Count == 0 || transform.HasParent)
         {
             return;
         }
         if (entity.IsAlive() && entity.Has<FollowLine>())
         {
             ref var followLine = ref entity.Get<FollowLine>();
+            
             if (followLine.line.IsAlive())
             {
                 ref var lineRenderer = ref followLine.line.Get<LineRenderer>();

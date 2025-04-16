@@ -96,14 +96,14 @@ public partial class StateSystem:BaseSystem<World,float>
                     state = EState.Frog;
                 }
                 
-                if (ctx.Input.Mouse.LeftDown)
+                if (ctx.Input.Mouse.LeftPressed)
                 {
                     var pos = CameraExt.ScreenToWorld(ctx.Input.Mouse.Position,ctx.Window,res.logicSize);
                     //TestExt.CreateSimpleFrog(world, pos,0,Vector2.One,texture, Color.Red);
                     var building = Engine.Asset.Assets.GetSubtexture("bd/0");
-                    TestExt.CreateBuilding(world, Vector2.Zero, 0,Vector2.One * 5, building, Color.Red,1);
+                    TestExt.CreateBuilding(world, Vector2.Zero, 0,Vector2.One, building, Color.Red,1);
                     
-                    TestExt.CreateBuilding(world, ctx.Window.Size/2, 0,Vector2.One * 5, building, Color.Blue,1);
+                    TestExt.CreateBuilding(world, res.logicSize with { X = 0 } / 2, 0,Vector2.One, building, Color.Blue,1);
                     
                 }
                 break;
@@ -131,8 +131,8 @@ public partial class StateSystem:BaseSystem<World,float>
                 break;
         }
         res.batcher.CircleLine(Vector2.Zero,20,3,10,Color.Black);
-        res.batcher.CircleLine(ctx.Window.SizeInPixels/2f,20,3,10,Color.Red);
-        res.batcher.CircleLine(ctx.Window.SizeInPixels,20,3,10,Color.Black);
+        res.batcher.CircleLine( res.logicSize /2f,20,3,10,Color.Red);
+        res.batcher.CircleLine(res.logicSize ,20,3,10,Color.Black);
         res.batcher.Render(res.target);
         res.batcher.Clear();
     }

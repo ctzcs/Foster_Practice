@@ -2,13 +2,14 @@
 using Arch.Core;
 using Arch.System;
 using Arch.System.SourceGenerator;
+using Engine.Performance;
 using Engine.Transform;
 using Foster.Framework;
 using Vector2 = System.Numerics.Vector2;
 
 namespace Engine.Camera;
 
-public partial class CameraMoveSystem:BaseSystem<World,float>
+public partial class CameraSystem:BaseSystem<World,float>
 {
     private World world;
     private App ctx;
@@ -17,7 +18,7 @@ public partial class CameraMoveSystem:BaseSystem<World,float>
     private float deltaTime;
     public static Entity Camera;
     private Target target;
-    public CameraMoveSystem(World world,App ctx,Target target) : base(world)
+    public CameraSystem(World world,App ctx,Target target) : base(world)
     {
         this.world = world;
         this.ctx = ctx;
@@ -40,6 +41,9 @@ public partial class CameraMoveSystem:BaseSystem<World,float>
 
     public override void Update(in float t)
     {
+#if DEBUG
+        using var zone = Profiler.BeginZone(nameof(CameraSystem));
+#endif
         deltaTime = t;
         MoveCameraQuery(world);
     }

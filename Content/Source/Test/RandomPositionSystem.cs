@@ -35,7 +35,7 @@ public partial class RandomPositionSystem:BaseSystem<World,float>
     
 
     [Query]
-    [All<Transform,SpriteRenderer>,None<HasParent>]
+    [All<Transform,SpriteRenderer>]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetRandomPosition(ref Transform transform)
     {
