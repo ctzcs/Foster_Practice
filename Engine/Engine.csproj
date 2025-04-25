@@ -28,6 +28,18 @@
         <Folder Include="Source\Particle\"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Source\UI\FairyGUI\FairyGUI.Test\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Source\UI\FairyGUI\FairyGUI.Test\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Source\UI\FairyGUI\FairyGUI.Test\**" />
+    </ItemGroup>
+
     
 
 </Project>

@@ -115,21 +115,36 @@ public partial class StateSystem:BaseSystem<World,float>
     {
         frameCounter.Update();
         res.batcher.Clear();
+        //显示文本
+        float wholeHeight = 0;
+        int maxWidth = 0;
+        float heightSpace = 2;
+        int leftAlign = 10;
+        string frogGroupCountTxt = $"Frog Group Count:{count} {frameCounter.FPS} FPS";
+        string stateTxt = $"State:{state},Press Space To Change";
+        string lineTxt = $"left mouse press add point,right mouse press cut down line";
+        string frogTxt = $"left mouse press add frog";
+        string buildingTxt = $"left mouse press add building";
+        //显示面板
         res.batcher.Quad(new Quad(new Vector2(0,0),new Vector2(600,0),new Vector2(600,100),new Vector2(0,100)),Color.Green);
-        res.batcher.Text(res.font, $"Frog Group Count:{count} {frameCounter.FPS} FPS", new Vector2(8, 0), Color.Black);
-        res.batcher.Text(res.font, $"State:{state},Press Space To Change", new Vector2(8,20), Color.Black);
+        res.batcher.Text(res.font,frogGroupCountTxt , new Vector2(leftAlign, wholeHeight), Color.Black);
+        wholeHeight += res.font.HeightOf(frogGroupCountTxt) + heightSpace; 
+        res.batcher.Text(res.font, stateTxt, new Vector2(leftAlign,wholeHeight), Color.Black);
+        wholeHeight += res.font.HeightOf(stateTxt) + heightSpace;
         switch (state)
         {
             case EState.Line:
-                res.batcher.Text(res.font,"left mouse click add point,s cut down line",new Vector2(8,40),color:Color.Black);
+                
+                res.batcher.Text(res.font,lineTxt,new Vector2(leftAlign,wholeHeight),color:Color.Black);
                 break;
             case EState.Frog:
-                res.batcher.Text(res.font,"left mouse press add frog",new Vector2(8,40),color:Color.Black);
+                res.batcher.Text(res.font,frogTxt,new Vector2(leftAlign,wholeHeight),color:Color.Black);
                 break;
             case EState.Building:
-                res.batcher.Text(res.font,"left mouse press add building",new Vector2(8,40),color:Color.Black);
+                res.batcher.Text(res.font,buildingTxt,new Vector2(leftAlign,wholeHeight),color:Color.Black);
                 break;
         }
+        //画出圆心
         res.batcher.CircleLine(Vector2.Zero,20,3,10,Color.Black);
         res.batcher.CircleLine( res.logicSize /2f,20,3,10,Color.Red);
         res.batcher.CircleLine(res.logicSize ,20,3,10,Color.Black);

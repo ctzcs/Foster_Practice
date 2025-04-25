@@ -52,11 +52,17 @@ public partial class RenderSystem:BaseSystem<World,float>
         //先画线
         LineRenderQuery(world);
         //再画Sprite
+
+#if DEBUG
         using (Profiler.BeginZone("Sort"))
+#endif
         {
             BuildSpriteRenderListQuery(world);
         }
+        
+#if DEBUG
         using (Profiler.BeginZone("DrawSprite"))
+#endif
         {
             HandleSpriteRenderList();
         }

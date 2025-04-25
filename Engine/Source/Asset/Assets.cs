@@ -31,6 +31,13 @@ public static class Assets
 		}
 	}
 
+
+	public static void SetFont(SpriteFont? font)
+	{
+		// 加载主要字体文件
+		Font = font; 
+	}
+	
 	/// <summary>
 	/// 打包资源
 	/// </summary>
@@ -40,9 +47,7 @@ public static class Assets
 		var spritesPath = Path.Join(AssetsPath, "Sprites");
 		var spriteFiles = new Dictionary<string, Aseprite>();
 
-		// 加载主要字体文件
-		Font = new SpriteFont(gfx, Path.Join(AssetsPath, "Fonts", "monogram.ttf"), 32);
-		Font.LineGap = 4;
+		
 
 		// 获取所有的ase结尾的sprites文件
 		foreach (var file in Directory.EnumerateFiles(spritesPath, "*.ase", SearchOption.AllDirectories))

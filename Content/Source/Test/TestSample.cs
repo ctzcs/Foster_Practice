@@ -8,6 +8,8 @@ using Engine.Performance;
 using Engine.Render;
 using Engine.Test;
 using Engine.Transform;
+using Engine.UI;
+using Engine.UI.Widgets;
 using Foster.Framework;
 
 
@@ -25,7 +27,7 @@ public class TestSample:IContent
     private Target target;
     private int width = 1280;
     private int height = 720;
-
+    private UiRoot uiRoot;
     public Target Target => target;
 
     public TestSample(App ctx,Batcher batcher)
@@ -33,12 +35,19 @@ public class TestSample:IContent
         this.ctx = ctx;
         world = World.Create();
         Engine.Asset.Assets.Load(ctx.GraphicsDevice);
+        var font = new SpriteFont(ctx.GraphicsDevice, 
+            Path.Join(Engine.Asset.Assets.AssetsPath, "Fonts", "SmileySans-Oblique.ttf"), 
+            32);
+        font.LineGap = 32;
+        
+        
+        Engine.Asset.Assets.SetFont(font);
         
         frameCounter = new FrameCounter();
         target = new Target(ctx.GraphicsDevice,width,height);
         res = new Resources(
             target,
-            Engine.Asset.Assets.Font,
+            font,
             Engine.Asset.Assets.Atlas,
             batcher,
             new Vector2(width,height));
@@ -54,12 +63,19 @@ public class TestSample:IContent
             
             new RenderSystem(world,res.batcher,target)
             /*new PrintEntitiesSystem(world)*/);
+        
+        
+        uiRoot = new UiRoot(ctx.Input,ctx.Window,res.logicSize);
+        uiRoot.Root.AddChild(new Button(true,true,true,new Rect(0,0,400,400),null));
     }
     
 
     public void Start()
     {
-        Profiler.AppInfo("Hello AppInfo!");
+#if DEBUG
+        Profiler.AppInfo("Test Sample!");
+#endif
+        
         modules.Initialize();
         
     }
@@ -76,22 +92,25 @@ public class TestSample:IContent
 #endif
         deltaTime = ctx.Time.Delta;
         modules.Update(in deltaTime);
-        
+        uiRoot.Update();
     }
 
     public void Render()
     {
 #if DEBUG
         using (Profiler.BeginZone("Render"))
-        {
 #endif
-            
+        {
             target.Clear(Color.White);
             modules.AfterUpdate(in deltaTime);
             res.batcher.Render(target);
             res.batcher.Clear();
-#if DEBUG
+            uiRoot.AfterUpdate(res.batcher);
+            res.batcher.Render(target);
+            res.batcher.Clear();
         }
+        
+#if DEBUG
         Profiler.EmitFrameMark();
 #endif
         

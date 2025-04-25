@@ -20,7 +20,7 @@
     <PropertyGroup>
         <PublishSingleFile>true</PublishSingleFile> <!-- 启用单文件发布 -->
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-        <PublishAot>true</PublishAot> <!-- 启用AOT编译 -->
+        <!--<PublishAot>true</PublishAot>--> <!-- 启用AOT编译 -->
         <SelfContained>true</SelfContained> <!-- 强制包含所有依赖 -->
         
     </PropertyGroup>
