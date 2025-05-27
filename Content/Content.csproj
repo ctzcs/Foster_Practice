@@ -25,4 +25,8 @@
       <ClCompile Include="Assets\Shader\Custom.hlsl" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="obj\" />
+    </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.Core.Extensions;

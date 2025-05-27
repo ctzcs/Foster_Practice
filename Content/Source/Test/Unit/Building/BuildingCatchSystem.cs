@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Arch.Buffer;
 using Arch.Core;
 using Arch.Core.Extensions;
