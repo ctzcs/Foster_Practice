@@ -16,7 +16,7 @@ public class GameApp : App
         UpdateMode = UpdateMode.FixedStep(60);
         //lifetime = new FrogSample(this);
         batcher = new Batcher(GraphicsDevice);
-        content = new TestSample(this,batcher);
+        content = new TestSample(this);
     }
 
     protected override void Startup()

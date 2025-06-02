@@ -1,4 +1,6 @@
-﻿namespace Engine;
+﻿using Foster.Framework;
+
+namespace Engine;
 
 public interface ILifetime
 {

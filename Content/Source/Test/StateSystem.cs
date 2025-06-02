@@ -44,6 +44,7 @@ public partial class StateSystem:BaseSystem<World,float>
     public override void Update(in float t)
     {
         
+        
         switch (state)
         {
             case EState.Frog:

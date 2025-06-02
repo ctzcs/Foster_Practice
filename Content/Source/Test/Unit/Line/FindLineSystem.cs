@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using Arch.Core;
 using Arch.Core.Extensions;
+using Arch.Relationships;
 using Arch.System;
 using Arch.System.SourceGenerator;
 using Engine.Other;
@@ -31,7 +32,6 @@ public partial class FindLineSystem:BaseSystem<World,float>
 #if DEBUG
         using var zone = Profiler.BeginZone(nameof(FindLineSystem));
 #endif
-        
         deltaTime = t;
         _lineEntities.Clear();
         AllLineEntitiesQuery(world);

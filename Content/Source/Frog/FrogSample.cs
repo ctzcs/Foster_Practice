@@ -14,7 +14,7 @@ public class FrogSample:ILifetime
     private const int AddRemoveAmount = 5_000;
     private const int DrawBatchSize = 32768;
 
-    private readonly Batcher batcher;
+    private readonly Batcher _batcher;
     private readonly SpriteFont font;
     private readonly FrameCounter frameCounter = new();
     private readonly Frog[] frogs = new Frog[MaxFrogs];
@@ -29,7 +29,7 @@ public class FrogSample:ILifetime
     public FrogSample(App ctx)
     {
         this.ctx = ctx;
-        batcher = new Batcher(ctx.GraphicsDevice);
+        _batcher = new Batcher(ctx.GraphicsDevice);
         texture = new Texture(ctx.GraphicsDevice, new Image(Path.Join("Assets", "frog_knight.png")));
         font = new SpriteFont(ctx.GraphicsDevice, Path.Join("Assets", "monogram.ttf"), 32);
 
@@ -132,14 +132,15 @@ public class FrogSample:ILifetime
                 frogs[i].Speed.Y *= -1;
         }
     }
+    
 
     public void Render()
     {
         frameCounter.Update();
         ctx.Window.Clear(Color.White);
-        batcher.Text(font, $"{frogCount} Frogs : {frameCounter.FPS} FPS", new Vector2(8, -2), Color.Black);
-        batcher.Render(ctx.Window);
-        batcher.Clear();
+        _batcher.Text(font, $"{frogCount} Frogs : {frameCounter.FPS} FPS", new Vector2(8, -2), Color.Black);
+        _batcher.Render(ctx.Window);
+        _batcher.Clear();
         // Batching/batch size is important: too low = excessive draw calls, too high = slower gpu copies
         for (var i = 0; i < frogCount; i += DrawBatchSize)
         {
@@ -172,11 +173,11 @@ public class FrogSample:ILifetime
         for (var i = 0; i < count; i++)
         {
             var frog = frogs[i + from];
-            batcher.Image(texture, frog.Position, frog.Color);
+            _batcher.Image(texture, frog.Position, frog.Color);
         }
 
-        batcher.Render(ctx.Window);
-        batcher.Clear();
+        _batcher.Render(ctx.Window);
+        _batcher.Clear();
     }
 
     /// <summary>

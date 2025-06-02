@@ -29,9 +29,10 @@ public class TestSample:IContent
     private int width = 1280;
     private int height = 720;
     private UiRoot uiRoot;
+    private readonly Batcher batcher;
     public Target Target => target;
 
-    public TestSample(App ctx,Batcher batcher)
+    public TestSample(App ctx)
     {
         this.ctx = ctx;
         world = World.Create();
@@ -43,7 +44,7 @@ public class TestSample:IContent
         
         
         Engine.Asset.Assets.SetFont(font);
-        
+        batcher = new Batcher(ctx.GraphicsDevice);
         frameCounter = new FrameCounter();
         target = new Target(ctx.GraphicsDevice,width,height);
         res = new Resources(
@@ -70,6 +71,8 @@ public class TestSample:IContent
         uiRoot.Root.AddChild(new Button(true,true,true,new Rect(0,0,400,400),null));
     }
     
+    
+    
 
     public void Start()
     {
@@ -95,7 +98,7 @@ public class TestSample:IContent
         modules.Update(in deltaTime);
         uiRoot.Update();
     }
-
+    
     public void Render()
     {
 #if DEBUG
@@ -104,11 +107,11 @@ public class TestSample:IContent
         {
             target.Clear(Color.White);
             modules.AfterUpdate(in deltaTime);
-            res.batcher.Render(target);
-            res.batcher.Clear();
-            uiRoot.AfterUpdate(res.batcher);
-            res.batcher.Render(target);
-            res.batcher.Clear();
+            batcher.Render(target);
+            batcher.Clear();
+            uiRoot.AfterUpdate(batcher);
+            batcher.Render(target);
+            batcher.Clear();
         }
         
 #if DEBUG
